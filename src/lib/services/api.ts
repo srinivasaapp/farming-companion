@@ -78,7 +78,7 @@ export async function createQuestion(title: string, description: string, crop: s
             title,
             description,
             crop,
-            author_id: authorId,
+            user_id: authorId, // Fixed column name
             image_url: imageUrl,
             is_solved: false
         })
@@ -94,11 +94,15 @@ export async function createNews(news: {
     summary: string;
     content?: string;
     image_url?: string;
-    author_id: string; // Ensure this matches DB schema (might be user_id or profile_id)
+    author_id: string;
 }) {
+    const { author_id, ...rest } = news;
     const { data, error } = await supabase
         .from('news')
-        .insert(news)
+        .insert({
+            ...rest,
+            user_id: author_id // Fixed column name
+        })
         .select()
         .single();
 
@@ -108,16 +112,19 @@ export async function createNews(news: {
 
 export async function createStory(story: {
     title: string;
-    src?: string; // Video URL
-    image_url?: string; // Thumbnail or Photo
-    expert?: string; // Optional manual override
+    src?: string;
+    image_url?: string;
+    expert?: string;
     role: string;
     author_id: string;
 }) {
-    // Stories table likely needs src/media_url. Adjusting to generic insert.
+    const { author_id, ...rest } = story;
     const { data, error } = await supabase
         .from('stories')
-        .insert(story)
+        .insert({
+            ...rest,
+            user_id: author_id // Fixed column name
+        })
         .select()
         .single();
 
@@ -135,10 +142,12 @@ export async function createListing(listing: {
     author_id: string;
     image_url?: string;
 }) {
+    const { author_id, ...rest } = listing;
     const { data, error } = await supabase
         .from('listings')
         .insert({
-            ...listing,
+            ...rest,
+            user_id: author_id, // Fixed column name
             status: 'active'
         })
         .select()
