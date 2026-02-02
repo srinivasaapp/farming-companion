@@ -1,9 +1,7 @@
 "use client";
 
 import { HomeHeader } from "@/components/home/HomeHeader";
-import { UserCard } from "@/components/home/UserCard";
 import { DashboardWidgets } from "@/components/home/DashboardWidgets";
-import { AccountTools } from "@/components/home/AccountTools";
 
 export default function HomePage() {
   const { user, lang, setLanguage, setShowLoginModal } = useAuth();
@@ -80,10 +78,6 @@ export default function HomePage() {
       {/* Main Content Area */}
       <div className="p-4 space-y-6">
         <DashboardWidgets />
-
-        <UserCard />
-
-        <AccountTools />
 
         <div className="text-center text-xs text-gray-400 py-4 mt-auto">
           copyright 2026 @ keypaper.in
