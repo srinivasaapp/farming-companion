@@ -118,7 +118,7 @@ export async function createStory(story: {
     role: string;
     author_id: string;
 }) {
-    const { author_id, ...rest } = story;
+    const { author_id, role, ...rest } = story;
     const { data, error } = await supabase
         .from('stories')
         .insert({
