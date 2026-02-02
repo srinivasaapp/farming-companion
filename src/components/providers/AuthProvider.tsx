@@ -325,7 +325,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Redirects to /auth/update-password (we will create this or handle implicit auth)
         // Since we are PWA/SPA, standard linking usually works if we handle the recovery event.
         return await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}`, // Redirects home, where we can detect recovery event
+            redirectTo: `${window.location.origin}/auth/update-password`,
         });
     };
 
