@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Send, Loader2, HelpCircle } from "lucide-react";
+import { MediaUploader } from "@/components/common/MediaUploader";
 
 export default function AskQuestionPage() {
     const router = useRouter();
@@ -56,10 +57,14 @@ export default function AskQuestionPage() {
                     </select>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                    <div className="aspect-square bg-white rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400 gap-1 hover:bg-gray-50 cursor-pointer transition-colors">
-                        <span className="text-xs font-bold">+ Photo</span>
-                    </div>
+                <div className="">
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Attachments (Optional)</label>
+                    <MediaUploader
+                        onFileSelect={(file) => console.log("Selected:", file)}
+                        accept="both"
+                        label="Add Photo or Video"
+                        showPreview={true}
+                    />
                 </div>
 
                 <button

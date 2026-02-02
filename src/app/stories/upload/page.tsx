@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Upload, Loader2, Video } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { MediaUploader } from "@/components/common/MediaUploader";
 
 export default function UploadStoryPage() {
     const router = useRouter();
@@ -33,42 +34,43 @@ export default function UploadStoryPage() {
             </div>
 
             <form onSubmit={handleUpload} className="p-4 space-y-6 max-w-lg mx-auto flex flex-col h-[80vh] justify-center">
-                {/* Video Upload Placeholder */}
-                <div className="aspect-[9/16] bg-gray-900 rounded-3xl border-2 border-dashed border-gray-700 flex flex-col items-center justify-center text-gray-500 gap-3 hover:bg-gray-800 transition-colors cursor-pointer">
-                    <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center text-blue-400">
-                        <Video size={32} />
+                <form onSubmit={handleUpload} className="p-4 space-y-6 max-w-lg mx-auto flex flex-col h-[80vh] justify-center">
+                    {/* Media Upload */}
+                    <div className="flex-1 flex flex-col justify-center">
+                        <MediaUploader
+                            onFileSelect={(file) => console.log("Selected:", file)}
+                            accept="both"
+                            label="Upload Story (Video/Photo)"
+                        />
                     </div>
-                    <span className="text-sm font-medium">Select Video</span>
-                    <span className="text-xs text-gray-600">Max 60 seconds</span>
-                </div>
 
-                <div>
-                    <input
-                        type="text"
-                        className="w-full bg-transparent border-b border-gray-700 px-2 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 text-lg"
-                        placeholder="Add a caption..."
-                        required
-                    />
-                </div>
+                    <div>
+                        <input
+                            type="text"
+                            className="w-full bg-transparent border-b border-gray-700 px-2 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 text-lg"
+                            placeholder="Add a caption..."
+                            required
+                        />
+                    </div>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 mt-auto"
-                >
-                    {loading ? (
-                        <>
-                            <Loader2 size={20} className="animate-spin" />
-                            Processing...
-                        </>
-                    ) : (
-                        <>
-                            <Upload size={20} />
-                            Share Story
-                        </>
-                    )}
-                </button>
-            </form>
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 mt-auto"
+                    >
+                        {loading ? (
+                            <>
+                                <Loader2 size={20} className="animate-spin" />
+                                Processing...
+                            </>
+                        ) : (
+                            <>
+                                <Upload size={20} />
+                                Share Story
+                            </>
+                        )}
+                    </button>
+                </form>
         </div>
     );
 }
