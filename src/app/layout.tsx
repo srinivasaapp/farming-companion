@@ -21,6 +21,15 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  icons: {
+    icon: [
+      { url: '/logo.png' },
+      { url: new URL('/favicon.ico', 'https://keypaper.in') } // Force absolute URL for favicon to avoid confusion
+    ],
+    apple: [
+      { url: '/icon-192.png' }
+    ]
+  }
 };
 
 export const viewport = {
