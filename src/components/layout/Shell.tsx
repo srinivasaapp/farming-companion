@@ -7,9 +7,8 @@ import { Signup } from "../auth/Signup";
 import { Navigation } from "./Navigation";
 import styles from "./Shell.module.css";
 import { X, AlertCircle, RefreshCcw, LogOut } from "lucide-react";
-import { useAuth } from "@/components/providers/AuthProvider";
-import { useRouter, usePathname } from "next/navigation";
-// import { ContextFAB } from "../common/ContextFAB";
+import { useLanguage } from "@/components/providers/LanguageProvider";
+import { getTranslatedError } from "@/lib/i18n/errors";
 
 export function Shell({ children }: { children: React.ReactNode }) {
     const {
@@ -17,6 +16,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         showLoginModal, setShowLoginModal
     } = useAuth();
     const router = useRouter();
+    const { lang } = useLanguage();
 
     const pathname = usePathname();
 
@@ -36,27 +36,23 @@ export function Shell({ children }: { children: React.ReactNode }) {
         return () => clearTimeout(timer);
     }, []);
 
-
-
     // 1. Terminal Error State (Highest Priority)
     if (error) {
+        const { title, message } = getTranslatedError(error, lang);
+
         return (
             <div className={styles.errorContainer}>
                 <div className={styles.errorIcon}>
                     <AlertCircle size={48} />
                 </div>
-                <h1 className={styles.errorTitle}>Connection Delayed</h1>
-                <p className={styles.errorText}>
-                    {error.includes("timed out")
-                        ? "The database is waking up or taking too long. Please wait a moment and try again."
-                        : error}
-                </p>
+                <h1 className={styles.errorTitle}>{title}</h1>
+                <p className={styles.errorText}>{message}</p>
                 <div className={styles.errorActions}>
                     <button onClick={() => window.location.reload()} className={styles.retryBtn}>
-                        <RefreshCcw size={20} /> Retry Connection
+                        <RefreshCcw size={20} /> Retry / మళ్ళీ ప్రయత్నించండి
                     </button>
                     <button onClick={signOut} className={styles.logoutBtn}>
-                        <LogOut size={20} /> Logout & Reset
+                        <LogOut size={20} /> Logout / లాగౌట్
                     </button>
                 </div>
                 <p className="mt-8 text-[10px] text-gray-400 font-mono">STATUS: {error.split(':')[0] || 'ID_FAILURE'}</p>
