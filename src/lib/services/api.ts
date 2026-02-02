@@ -89,6 +89,42 @@ export async function createQuestion(title: string, description: string, crop: s
     return data;
 }
 
+export async function createNews(news: {
+    title: string;
+    summary: string;
+    content?: string;
+    image_url?: string;
+    author_id: string; // Ensure this matches DB schema (might be user_id or profile_id)
+}) {
+    const { data, error } = await supabase
+        .from('news')
+        .insert(news)
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+
+export async function createStory(story: {
+    title: string;
+    src?: string; // Video URL
+    image_url?: string; // Thumbnail or Photo
+    expert?: string; // Optional manual override
+    role: string;
+    author_id: string;
+}) {
+    // Stories table likely needs src/media_url. Adjusting to generic insert.
+    const { data, error } = await supabase
+        .from('stories')
+        .insert(story)
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+
 export async function createListing(listing: {
     title: string;
     description: string;

@@ -11,13 +11,36 @@ export default function UploadStoryPage() {
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
 
+    const [file, setFile] = useState<File | null>(null);
+    const [caption, setCaption] = useState("");
+
     const handleUpload = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
+
+        try {
+            if (!user) throw new Error("Login required");
+            if (!file) throw new Error("Please select a video or photo");
+
+            const { uploadImage, createStory } = await import("@/lib/services/api");
+
+            // Upload to 'stories' bucket
+            const mediaUrl = await uploadImage(file, 'stories');
+
+            await createStory({
+                title: caption,
+                src: mediaUrl, // Assuming 'src' is the column for video/image URL
+                role: user.user_metadata?.role || 'farmer',
+                author_id: user.id
+            });
+
             router.push("/stories");
-        }, 1500);
+        } catch (err: any) {
+            console.error("Story upload failed", err);
+            alert("Failed to post story: " + err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -37,7 +60,7 @@ export default function UploadStoryPage() {
                 {/* Media Upload */}
                 <div className="flex-1 flex flex-col justify-center">
                     <MediaUploader
-                        onFileSelect={(file) => console.log("Selected:", file)}
+                        onFileSelect={(f) => setFile(f)}
                         accept="both"
                         label="Upload Story (Video/Photo)"
                     />
@@ -48,6 +71,8 @@ export default function UploadStoryPage() {
                         type="text"
                         className="w-full bg-transparent border-b border-gray-700 px-2 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 text-lg"
                         placeholder="Add a caption..."
+                        value={caption}
+                        onChange={(e) => setCaption(e.target.value)}
                         required
                     />
                 </div>

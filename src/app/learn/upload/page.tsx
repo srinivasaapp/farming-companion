@@ -16,16 +16,47 @@ export default function UploadNewsPage() {
     const [summary, setSummary] = useState("");
     const [content, setContent] = useState("");
 
+    const [file, setFile] = useState<File | null>(null);
+
     const handleUpload = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
-        // TODO: Implement actual Supabase upload logic here
-        // For now, simulate a delay and redirect
-        setTimeout(() => {
-            setLoading(false);
+        try {
+            if (!user) throw new Error("You must be logged in to post news.");
+
+            let imageUrl = undefined;
+            if (file) {
+                // Reuse uploadImage from api.ts (needs to be imported or moved to common hook)
+                // For now, importing from api works if we export it.
+                const { uploadImage, createNews } = await import("@/lib/services/api");
+                imageUrl = await uploadImage(file, 'news');
+
+                await createNews({
+                    title,
+                    summary,
+                    content,
+                    image_url: imageUrl,
+                    author_id: user.id
+                });
+            } else {
+                const { createNews } = await import("@/lib/services/api");
+                await createNews({
+                    title,
+                    summary,
+                    content,
+                    author_id: user.id
+                });
+            }
+
+            // Success
             router.push("/learn");
-        }, 1500);
+        } catch (err: any) {
+            console.error("Upload failed", err);
+            alert("Failed to upload news: " + err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -44,7 +75,7 @@ export default function UploadNewsPage() {
             <form onSubmit={handleUpload} className="p-4 space-y-6 max-w-lg mx-auto">
                 {/* Media Upload (Image or Video) */}
                 <MediaUploader
-                    onFileSelect={(file) => console.log("Selected:", file)}
+                    onFileSelect={(f) => setFile(f)}
                     accept="both"
                     label="Add Cover Image or Video"
                 />

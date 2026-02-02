@@ -4,18 +4,53 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Tag, Loader2, MapPin } from "lucide-react";
 import { MediaUploader } from "@/components/common/MediaUploader";
+import { useAuth } from "@/components/providers/AuthProvider";
 
 export default function UploadMarketPage() {
     const router = useRouter();
+    const { user } = useAuth();
     const [loading, setLoading] = useState(false);
+
+    // State
+    const [title, setTitle] = useState("");
+    const [price, setPrice] = useState("");
+    const [unit, setUnit] = useState("kg");
+    const [location, setLocation] = useState("");
+    const [desc, setDesc] = useState("");
+    const [file, setFile] = useState<File | null>(null);
 
     const handleUpload = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
+
+        try {
+            if (!user) throw new Error("Login required");
+
+            const { uploadImage, createListing } = await import("@/lib/services/api");
+
+            let imageUrl = undefined;
+            if (file) {
+                imageUrl = await uploadImage(file, 'listings');
+            }
+
+            await createListing({
+                title,
+                price: Number(price),
+                price_unit: unit,
+                location_text: location,
+                description: desc,
+                type: 'sell', // Defaulting to sell for this simplified page, or add selector
+                author_id: user.id,
+                image_url: imageUrl
+            });
+
             router.push("/market");
-        }, 1500);
+        } catch (err: any) {
+            console.error("Market post failed", err);
+            alert("Failed to list item: " + err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -33,7 +68,7 @@ export default function UploadMarketPage() {
             <form onSubmit={handleUpload} className="p-4 space-y-6 max-w-lg mx-auto">
                 {/* Media Upload */}
                 <MediaUploader
-                    onFileSelect={(file) => console.log("Selected:", file)}
+                    onFileSelect={(f) => setFile(f)}
                     accept="both"
                     label="Add Photos or Video of Item"
                 />
@@ -45,6 +80,8 @@ export default function UploadMarketPage() {
                             type="text"
                             className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
                             placeholder="e.g. Tractor 45HP"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
                             required
                         />
                     </div>
@@ -56,16 +93,22 @@ export default function UploadMarketPage() {
                                 type="number"
                                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
                                 placeholder="0"
+                                value={price}
+                                onChange={(e) => setPrice(e.target.value)}
                                 required
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-bold text-gray-700 mb-1">Unit</label>
-                            <select className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500">
-                                <option>Fixed Price</option>
-                                <option>Per Kg</option>
-                                <option>Per Quintal</option>
-                                <option>Per Hour</option>
+                            <select
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                                value={unit}
+                                onChange={(e) => setUnit(e.target.value)}
+                            >
+                                <option value="Fixed Price">Fixed Price</option>
+                                <option value="kg">Per Kg</option>
+                                <option value="quintal">Per Quintal</option>
+                                <option value="hour">Per Hour</option>
                             </select>
                         </div>
                     </div>
@@ -78,6 +121,8 @@ export default function UploadMarketPage() {
                                 type="text"
                                 className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
                                 placeholder="Your District/Mandal"
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
                                 required
                             />
                         </div>
@@ -88,6 +133,8 @@ export default function UploadMarketPage() {
                         <textarea
                             className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 h-32 resize-none"
                             placeholder="Condition, age, specifications..."
+                            value={desc}
+                            onChange={(e) => setDesc(e.target.value)}
                         />
                     </div>
                 </div>

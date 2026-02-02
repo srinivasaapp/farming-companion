@@ -4,18 +4,47 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Send, Loader2, HelpCircle } from "lucide-react";
 import { MediaUploader } from "@/components/common/MediaUploader";
+import { useAuth } from "@/components/providers/AuthProvider";
 
 export default function AskQuestionPage() {
     const router = useRouter();
+    const { user } = useAuth();
     const [loading, setLoading] = useState(false);
+
+    // State
+    const [question, setQuestion] = useState("");
+    const [category, setCategory] = useState("General");
+    const [file, setFile] = useState<File | null>(null);
 
     const handleUpload = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
+
+        try {
+            if (!user) throw new Error("Login required");
+
+            const { uploadImage, createQuestion } = await import("@/lib/services/api");
+
+            let imageUrl = undefined;
+            if (file) {
+                imageUrl = await uploadImage(file, 'questions');
+            }
+
+            await createQuestion(
+                question, // title
+                "", // description (optional or merge)
+                category, // crop/category
+                user.id,
+                imageUrl
+            );
+
             router.push("/ask");
-        }, 1500);
+        } catch (err: any) {
+            console.error("Question post failed", err);
+            alert("Failed to post question: " + err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -42,25 +71,31 @@ export default function AskQuestionPage() {
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 h-32 resize-none text-lg"
                         placeholder="What's causing these spots on my leaves?"
                         autoFocus
+                        value={question}
+                        onChange={(e) => setQuestion(e.target.value)}
                         required
                     />
                 </div>
 
                 <div>
                     <label className="block text-sm font-bold text-gray-700 mb-1">Category</label>
-                    <select className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                        <option>Crop Disease</option>
-                        <option>Pest Control</option>
-                        <option>Fertilizers</option>
-                        <option>Machinery</option>
-                        <option>General</option>
+                    <select
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                    >
+                        <option value="Crop Disease">Crop Disease</option>
+                        <option value="Pest Control">Pest Control</option>
+                        <option value="Fertilizers">Fertilizers</option>
+                        <option value="Machinery">Machinery</option>
+                        <option value="General">General</option>
                     </select>
                 </div>
 
                 <div className="">
                     <label className="block text-sm font-bold text-gray-700 mb-2">Attachments (Optional)</label>
                     <MediaUploader
-                        onFileSelect={(file) => console.log("Selected:", file)}
+                        onFileSelect={(f) => setFile(f)}
                         accept="both"
                         label="Add Photo or Video"
                         showPreview={true}
