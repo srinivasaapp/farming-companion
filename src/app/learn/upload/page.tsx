@@ -117,13 +117,14 @@ export default function UploadNewsPage() {
 
                 <button
                     type="submit"
-                    disabled={loading}
-                    className="w-full bg-green-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-green-600/20 flex items-center justify-center gap-2 disabled:opacity-70"
+                    disabled={!!status}
+                    className={`w-full font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 disabled:opacity-70 ${status ? "bg-gray-400 text-white" : "bg-green-600 text-white shadow-green-600/20"
+                        }`}
                 >
-                    {loading ? (
+                    {status ? (
                         <>
                             <Loader2 size={20} className="animate-spin" />
-                            Uploading...
+                            {status}
                         </>
                     ) : (
                         <>

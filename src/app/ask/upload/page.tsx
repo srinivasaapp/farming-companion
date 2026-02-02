@@ -104,13 +104,14 @@ export default function AskQuestionPage() {
 
                 <button
                     type="submit"
-                    disabled={loading}
-                    className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2"
+                    disabled={!!status}
+                    className={`w-full font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 ${status ? "bg-gray-400 text-white" : "bg-blue-600 text-white shadow-blue-600/20"
+                        }`}
                 >
-                    {loading ? (
+                    {status ? (
                         <>
                             <Loader2 size={20} className="animate-spin" />
-                            Posting...
+                            {status}
                         </>
                     ) : (
                         <>
