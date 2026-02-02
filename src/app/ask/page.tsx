@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import styles from "./page.module.css";
-import { TopTabNav } from "@/components/common/TopTabNav";
+import { FeedHeader, UserRole } from "@/components/common/FeedHeader";
 import { Plus, Search, HelpCircle, AlertCircle, RefreshCcw, Camera, Image as ImageIcon, X, Trash2, ThumbsUp, MessageCircle, Share2 } from "lucide-react";
 import { CommentSection } from "@/components/feed/CommentSection";
 import { useAuth } from "@/components/providers/AuthProvider";
@@ -37,7 +37,6 @@ export default function AskPage() {
     const [pageError, setPageError] = useState<string | null>(null);
     const [showAskModal, setShowAskModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [activeTab, setActiveTab] = useState<'expert' | 'user'>('user');
 
     // Form State
     const [newTitle, setNewTitle] = useState("");
@@ -129,21 +128,28 @@ export default function AskPage() {
         }
     };
 
+    const [selectedRoles, setSelectedRoles] = useState<UserRole[]>([]);
+
     const filteredQuestions = useMemo(() => {
         const lowerQuery = searchQuery.toLowerCase();
-        return questions.filter(q =>
+        let filtered = questions.filter(q =>
             q.title.toLowerCase().includes(lowerQuery) ||
             (q.description && q.description.toLowerCase().includes(lowerQuery))
         );
-    }, [searchQuery, questions]);
+
+        if (selectedRoles.length > 0) {
+            filtered = filtered.filter(q => selectedRoles.includes(q.profiles?.role as UserRole));
+        }
+        return filtered;
+    }, [searchQuery, questions, selectedRoles]);
 
     return (
         <div className="flex flex-col min-h-screen bg-gray-50 pb-20">
-            <TopTabNav
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-                onExpertAdd={() => alert("Add Expert FAQ")}
-                onUserAdd={handleAsk}
+            <FeedHeader
+                title={t('nav_ask')}
+                uploadPath="/ask/upload"
+                selectedRoles={selectedRoles}
+                onRoleChange={setSelectedRoles}
             />
 
             <div className="p-4 sticky top-[58px] z-30 bg-gray-50 pb-2">
@@ -159,7 +165,7 @@ export default function AskPage() {
                 </div>
             </div>
             <div className="flex justify-between items-center px-4 mt-4">
-                <h2 className="font-bold text-gray-700">{activeTab === 'expert' ? 'Expert FAQs' : 'Community Q&A'}</h2>
+                <h2 className="font-bold text-gray-700">Community & Expert Q&A</h2>
                 {/* Plus button removed as it is now in the header */}
             </div>
 

@@ -9,7 +9,7 @@ import styles from "./Shell.module.css";
 import { X, AlertCircle, RefreshCcw, LogOut } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { usePathname } from "next/navigation";
-import { ContextFAB } from "../common/ContextFAB";
+// import { ContextFAB } from "../common/ContextFAB";
 
 export function Shell({ children }: { children: React.ReactNode }) {
     const {
@@ -114,7 +114,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <main className={styles.main}>
                 {children}
             </main>
-            <ContextFAB />
+            {/* <ContextFAB /> - Removed in favor of FeedHeader */}
             <Navigation />
         </div>
     );
