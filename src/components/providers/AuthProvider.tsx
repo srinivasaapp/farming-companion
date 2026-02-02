@@ -258,26 +258,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             async (_event, newSession) => {
                 console.log("AuthProvider: AuthStateChange Event:", _event);
 
-                if (_event === 'SIGNED_IN' || _event === 'TOKEN_REFRESHED' || _event === 'USER_UPDATED') {
+                if (_event === 'SIGNED_IN' || _event === 'USER_UPDATED') {
+                    // Only show loading for explicit sign-ins, not updates if we already have user
+                    if (_event === 'SIGNED_IN') setIsLoading(true);
+
                     if (newSession?.user) {
-                        setIsLoading(true);
                         setSession(newSession);
                         setUser(newSession.user);
                         try {
                             await handleIdentityLifecycle(newSession.user);
                         } catch (err) {
-                            // Error state updated in handleIdentityLifecycle
+                            console.error("Auth Lifecycle Error:", err);
                         } finally {
                             setIsLoading(false);
                         }
                     }
+                } else if (_event === 'TOKEN_REFRESHED') {
+                    // SILENT UPDATE: Do not trigger global loading state for token refreshes
+                    // This was causing the "stopped in the middle" issue
+                    if (newSession) {
+                        setSession(newSession);
+                        setUser(newSession.user);
+                    }
                 } else if (_event === 'SIGNED_OUT') {
+                    console.log("AuthProvider: Handling SignOut cleanup");
                     setSession(null);
                     setUser(null);
                     setProfile(null);
                     setError(null);
                     setIsLoading(false);
                     router.push("/");
+                    router.refresh(); // Ensure strict clear
                 }
             }
         );
