@@ -1,0 +1,142 @@
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-lg) var(--spacing-md);
+    background-color: transparent;
+}
+
+.header {
+    margin-bottom: var(--spacing-xl);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logoSmall {
+    width: 64px;
+    height: 64px;
+    background: var(--primary-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+    color: var(--foreground);
+}
+
+.subtitle {
+    color: #6B7280;
+    font-size: 0.875rem;
+}
+
+.formCard {
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border);
+    margin-bottom: auto;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.inputGroup {
+    display: flex;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.inputGroup:focus-within {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+.countryCode {
+    background: #F3F4F6;
+    padding: 0 var(--spacing-md);
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    color: #4B5563;
+    border-right: 1px solid var(--border);
+}
+
+.input {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+.otpInput {
+    text-align: center;
+    letter-spacing: 0.5rem;
+    font-family: monospace;
+    font-size: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.button {
+    background: var(--primary-green);
+    color: white;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.2s;
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.otpHint {
+    font-size: 0.875rem;
+    color: #6B7280;
+    margin-top: -8px;
+}
+
+.backButton {
+    background: transparent;
+    border: none;
+    color: var(--primary-green);
+    font-size: 0.875rem;
+    cursor: pointer;
+    margin-top: var(--spacing-sm);
+}
+
+.footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #9CA3AF;
+    padding-top: var(--spacing-lg);
+}

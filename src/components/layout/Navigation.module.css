@@ -1,0 +1,121 @@
+/* Mobile Nav - Always visible for this mobile-first app */
+.mobileNav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    min-height: 50px;
+    background-color: white;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+    padding-bottom: env(safe-area-inset-bottom, 10px);
+    padding-top: 4px;
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Desktop Header - Title only, no links */
+.desktopNav {
+    background-color: var(--primary-green);
+    color: white;
+    padding-top: max(var(--spacing-md), env(safe-area-inset-top));
+    padding-bottom: var(--spacing-md);
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.desktopContainer {
+    display: flex;
+    justify-content: space-between;
+    /* Space between title and toggle */
+    align-items: center;
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.langToggle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.langBtn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    padding: 2px 4px;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.langBtn:hover {
+    color: white;
+}
+
+.activeLang {
+    color: white !important;
+}
+
+.divider {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.desktopLinks {
+    display: none;
+    /* Hide top links as requested */
+}
+
+/* Mobile Nav Links */
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #9CA3AF;
+    /* Gray-400 */
+    flex: 1;
+    height: 100%;
+    gap: 4px;
+    transition: all 0.2s;
+    padding: 4px 0;
+}
+
+.item:active {
+    transform: scale(0.95);
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.active {
+    color: var(--primary-green);
+}
+
+.active .label {
+    font-weight: 700;
+}
+
+@media (min-width: 768px) {
+    /* Optional: We could make the bottom nav a side nav on large screens, 
+       but for "Android App" feel on web, keeping it bottom is acceptable 
+       or we can constrain the app width. For now, following strict user req:
+       "remove these from top bar and place them at bottom" */
+}

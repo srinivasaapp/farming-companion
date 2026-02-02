@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Keypaper</string>
+    <string name="title_activity_main">Keypaper</string>
+    <string name="package_name">com.keypaper.app</string>
+    <string name="custom_url_scheme">com.keypaper.app</string>
+</resources>

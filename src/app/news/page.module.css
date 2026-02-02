@@ -1,0 +1,187 @@
+/* Page Layout */
+.container {
+    padding-bottom: 100px;
+    /* Space for the fixed bottom bar */
+    min-height: 100vh;
+    background-color: white;
+}
+
+.hero {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    background-color: #f3f4f6;
+}
+
+.heroImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.heroOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    padding: 24px;
+    color: white;
+}
+
+.tags {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.3;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.meta {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.content {
+    padding: 24px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #374151;
+}
+
+/* Bullet Points (common in cards) */
+.bulletList {
+    list-style: none;
+    padding: 0;
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.bulletItem {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: #F9FAFB;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
+}
+
+.bulletPoint {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #10B981;
+    margin-top: 8px;
+    flex-shrink: 0;
+}
+
+/* Fixed Bottom Action Bar */
+.bottomBarWrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1100;
+    /* Above global nav if present */
+    /* Safe Area for Android Gesture Bar / iOS Home Bar */
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+    background: linear-gradient(to top, white 80%, rgba(255, 255, 255, 0));
+    pointer-events: none;
+    /* Let clicks pass through the gradient area */
+}
+
+/* ... existing styles ... */
+
+/* Back Button */
+.backBtn {
+    position: fixed;
+    top: calc(16px + env(safe-area-inset-top, 24px));
+    /* Safe area top dynamic */
+    left: 20px;
+    z-index: 50;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+}
+
+/* Comments Sheet (Simple Overlay for Demo) */
+.commentsSheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    z-index: 200;
+    border-radius: 20px 20px 0 0;
+    height: 60vh;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.commentsOpen {
+    transform: translateY(0);
+}
+
+.sheetHeader {
+    padding: 16px;
+    border-bottom: 1px solid #E5E7EB;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+}
+
+.sheetContent {
+    flex: 1;
+    padding: 24px;
+    color: #6B7280;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 150;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.overlayVisible {
+    opacity: 1;
+    pointer-events: auto;
+}
