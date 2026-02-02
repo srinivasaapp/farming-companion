@@ -20,7 +20,7 @@ interface Question {
     answers_count: number;
     created_at: string;
     author_id: string;
-    profiles: {
+    profiles?: {
         full_name: string;
         username: string;
         role: string;

@@ -11,6 +11,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { getListings, createListing, uploadImage, deleteListing } from "@/lib/services/api";
 import { X } from "lucide-react";
+import { getOptimizedImageUrl } from "@/lib/utils/image";
 
 interface Listing {
     id: string;
@@ -21,7 +22,7 @@ interface Listing {
     type: "buy" | "sell" | "rent";
     image_url: string | null;
     author_id: string;
-    profiles: {
+    profiles?: {
         full_name: string;
         role: string;
         is_verified: boolean;
@@ -229,7 +230,12 @@ export default function MarketPage() {
                         return (
                             <div key={item.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
                                 <div className="relative h-48 bg-gray-100">
-                                    <img src={item.image_url || "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=400"} alt={item.title} className="w-full h-full object-cover" />
+                                    <img
+                                        src={getOptimizedImageUrl(item.image_url, 400)}
+                                        alt={item.title}
+                                        loading="lazy"
+                                        className="w-full h-full object-cover"
+                                    />
                                     <div className={`absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 ${item.profiles?.role === 'expert' ? 'bg-green-600 text-white' : 'bg-white/90 text-gray-700'}`}>
                                         {item.profiles?.role === 'expert' && <Star size={10} fill="currentColor" />}
                                         {sellerType}
