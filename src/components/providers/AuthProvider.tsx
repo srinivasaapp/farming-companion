@@ -236,18 +236,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 } else {
                     console.log("AuthProvider: No session found (Guest Mode).");
                 }
-                // 3. Check for Onboarding
-                if (initialSession?.user) {
-                    const isProfileComplete =
-                        initialSession.user.user_metadata?.phone ||
-                        (await supabase.from('profiles').select('phone, location_district').eq('id', initialSession.user.id).single()).data?.phone;
+            } catch (err: any) {
+                // Ignore AbortError which happens on component unmount/remount in StrictMode
+                if (err.name === 'AbortError' || err.message?.includes('aborted')) {
+                    console.log("AuthProvider: Init aborted (benign).");
+                    return;
                 }
 
-                // We let the client-side useEffect in layout or specific pages handle redirect if needed, 
-                // OR we can do it here. A centralized check is better.
-                // For now, we just ensure `repairProfile` sets role to 'user'.
-
-            } catch (err: any) {
                 console.error("AuthProvider: Initialization Failed:", err);
                 if (isMounted) setError(err.message || "Failed to initialize secure session.");
             } finally {

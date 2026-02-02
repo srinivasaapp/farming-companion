@@ -42,67 +42,66 @@ export default function UploadNewsPage() {
             </div>
 
             <form onSubmit={handleUpload} className="p-4 space-y-6 max-w-lg mx-auto">
-                <form onSubmit={handleUpload} className="p-4 space-y-6 max-w-lg mx-auto">
-                    {/* Media Upload (Image or Video) */}
-                    <MediaUploader
-                        onFileSelect={(file) => console.log("Selected:", file)}
-                        accept="both"
-                        label="Add Cover Image or Video"
-                    />
+                {/* Media Upload (Image or Video) */}
+                <MediaUploader
+                    onFileSelect={(file) => console.log("Selected:", file)}
+                    accept="both"
+                    label="Add Cover Image or Video"
+                />
 
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Title</label>
-                            <input
-                                type="text"
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500"
-                                placeholder="Enter news headline..."
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Summary</label>
-                            <textarea
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 h-24 resize-none"
-                                placeholder="Brief summary..."
-                                value={summary}
-                                onChange={(e) => setSummary(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Full Content</label>
-                            <textarea
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 h-48 resize-none"
-                                placeholder="Detailed news content..."
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
-                            />
-                        </div>
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Title</label>
+                        <input
+                            type="text"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500"
+                            placeholder="Enter news headline..."
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                        />
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-green-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-green-600/20 flex items-center justify-center gap-2 disabled:opacity-70"
-                    >
-                        {loading ? (
-                            <>
-                                <Loader2 size={20} className="animate-spin" />
-                                Uploading...
-                            </>
-                        ) : (
-                            <>
-                                <Upload size={20} />
-                                Publish News
-                            </>
-                        )}
-                    </button>
-                </form>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Summary</label>
+                        <textarea
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 h-24 resize-none"
+                            placeholder="Brief summary..."
+                            value={summary}
+                            onChange={(e) => setSummary(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Full Content</label>
+                        <textarea
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 h-48 resize-none"
+                            placeholder="Detailed news content..."
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-green-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-green-600/20 flex items-center justify-center gap-2 disabled:opacity-70"
+                >
+                    {loading ? (
+                        <>
+                            <Loader2 size={20} className="animate-spin" />
+                            Uploading...
+                        </>
+                    ) : (
+                        <>
+                            <Upload size={20} />
+                            Publish News
+                        </>
+                    )}
+                </button>
+            </form>
         </div>
     );
 }

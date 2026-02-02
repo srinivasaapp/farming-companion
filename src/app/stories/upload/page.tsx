@@ -34,43 +34,42 @@ export default function UploadStoryPage() {
             </div>
 
             <form onSubmit={handleUpload} className="p-4 space-y-6 max-w-lg mx-auto flex flex-col h-[80vh] justify-center">
-                <form onSubmit={handleUpload} className="p-4 space-y-6 max-w-lg mx-auto flex flex-col h-[80vh] justify-center">
-                    {/* Media Upload */}
-                    <div className="flex-1 flex flex-col justify-center">
-                        <MediaUploader
-                            onFileSelect={(file) => console.log("Selected:", file)}
-                            accept="both"
-                            label="Upload Story (Video/Photo)"
-                        />
-                    </div>
+                {/* Media Upload */}
+                <div className="flex-1 flex flex-col justify-center">
+                    <MediaUploader
+                        onFileSelect={(file) => console.log("Selected:", file)}
+                        accept="both"
+                        label="Upload Story (Video/Photo)"
+                    />
+                </div>
 
-                    <div>
-                        <input
-                            type="text"
-                            className="w-full bg-transparent border-b border-gray-700 px-2 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 text-lg"
-                            placeholder="Add a caption..."
-                            required
-                        />
-                    </div>
+                <div>
+                    <input
+                        type="text"
+                        className="w-full bg-transparent border-b border-gray-700 px-2 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 text-lg"
+                        placeholder="Add a caption..."
+                        required
+                    />
+                </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 mt-auto"
-                    >
-                        {loading ? (
-                            <>
-                                <Loader2 size={20} className="animate-spin" />
-                                Processing...
-                            </>
-                        ) : (
-                            <>
-                                <Upload size={20} />
-                                Share Story
-                            </>
-                        )}
-                    </button>
-                </form>
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 mt-auto"
+                >
+                    {loading ? (
+                        <>
+                            <Loader2 size={20} className="animate-spin" />
+                            Processing...
+                        </>
+                    ) : (
+                        <>
+                            <Upload size={20} />
+                            Share Story
+                        </>
+                    )}
+                </button>
+            </form>
         </div>
     );
 }

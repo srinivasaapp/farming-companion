@@ -31,86 +31,85 @@ export default function UploadMarketPage() {
             </div>
 
             <form onSubmit={handleUpload} className="p-4 space-y-6 max-w-lg mx-auto">
-                <form onSubmit={handleUpload} className="p-4 space-y-6 max-w-lg mx-auto">
-                    {/* Media Upload */}
-                    <MediaUploader
-                        onFileSelect={(file) => console.log("Selected:", file)}
-                        accept="both"
-                        label="Add Photos or Video of Item"
-                    />
+                {/* Media Upload */}
+                <MediaUploader
+                    onFileSelect={(file) => console.log("Selected:", file)}
+                    accept="both"
+                    label="Add Photos or Video of Item"
+                />
 
-                    <div className="space-y-4">
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Item Name</label>
+                        <input
+                            type="text"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                            placeholder="e.g. Tractor 45HP"
+                            required
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Item Name</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Price (₹)</label>
                             <input
-                                type="text"
+                                type="number"
                                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
-                                placeholder="e.g. Tractor 45HP"
+                                placeholder="0"
                                 required
                             />
                         </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Price (₹)</label>
-                                <input
-                                    type="number"
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
-                                    placeholder="0"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-1">Unit</label>
-                                <select className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500">
-                                    <option>Fixed Price</option>
-                                    <option>Per Kg</option>
-                                    <option>Per Quintal</option>
-                                    <option>Per Hour</option>
-                                </select>
-                            </div>
-                        </div>
-
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Location</label>
-                            <div className="relative">
-                                <MapPin size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                <input
-                                    type="text"
-                                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
-                                    placeholder="Your District/Mandal"
-                                    required
-                                />
-                            </div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1">Unit</label>
+                            <select className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500">
+                                <option>Fixed Price</option>
+                                <option>Per Kg</option>
+                                <option>Per Quintal</option>
+                                <option>Per Hour</option>
+                            </select>
                         </div>
+                    </div>
 
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
-                            <textarea
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 h-32 resize-none"
-                                placeholder="Condition, age, specifications..."
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Location</label>
+                        <div className="relative">
+                            <MapPin size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="text"
+                                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                                placeholder="Your District/Mandal"
+                                required
                             />
                         </div>
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-amber-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-amber-600/20 flex items-center justify-center gap-2"
-                    >
-                        {loading ? (
-                            <>
-                                <Loader2 size={20} className="animate-spin" />
-                                Listing...
-                            </>
-                        ) : (
-                            <>
-                                <Tag size={20} />
-                                List for Sale
-                            </>
-                        )}
-                    </button>
-                </form>
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
+                        <textarea
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 h-32 resize-none"
+                            placeholder="Condition, age, specifications..."
+                        />
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-amber-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-amber-600/20 flex items-center justify-center gap-2"
+                >
+                    {loading ? (
+                        <>
+                            <Loader2 size={20} className="animate-spin" />
+                            Listing...
+                        </>
+                    ) : (
+                        <>
+                            <Tag size={20} />
+                            List for Sale
+                        </>
+                    )}
+                </button>
+            </form>
         </div>
     );
 }
