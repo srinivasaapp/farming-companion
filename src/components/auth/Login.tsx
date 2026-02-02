@@ -37,7 +37,7 @@ export function Login({ onLogin, onSwitchToSignup }: LoginProps) {
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.logoSmall}>
-                    <Leaf size={32} color="var(--primary-green)" />
+                    <img src="/logo.png" alt="Keypaper" className="w-16 h-16 object-contain" />
                 </div>
                 <h1 className={styles.title}>{t('auth_title_login')}</h1>
                 <p className={styles.subtitle}>{t('auth_subtitle_login')}</p>

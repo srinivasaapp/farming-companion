@@ -18,7 +18,10 @@ export function HomeHeader() {
     return (
         <header className="flex items-center justify-between px-4 py-4 bg-white sticky top-0 z-10 shadow-sm">
             <div className="flex flex-col">
-                <h1 className="text-xl font-bold text-green-800">Keypaper</h1>
+                <div className="flex items-center gap-2">
+                    <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
+                    <h1 className="text-xl font-bold text-green-800">Keypaper</h1>
+                </div>
                 <span className="text-xs text-gray-500">
                     {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>

@@ -20,7 +20,7 @@ export function Splash({ onComplete }: SplashProps) {
         <div className={styles.container}>
             <div className={styles.content}>
                 <div className={styles.logo}>
-                    <Leaf size={64} color="white" />
+                    <img src="/logo.png" alt="Keypaper" className="w-32 h-32 object-contain" />
                 </div>
                 <h1 className={styles.title}>Keypaper</h1>
                 <p className={styles.tagline}>From soil to sale – all farming in one app</p>

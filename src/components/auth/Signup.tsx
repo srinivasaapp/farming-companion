@@ -97,7 +97,7 @@ export function Signup({ onSignupSuccess, onSwitchToLogin }: SignupProps) {
             <div className={styles.container}>
                 <div className={styles.header}>
                     <div className={styles.logoSmall}>
-                        <Leaf size={32} color="var(--primary-green)" />
+                        <img src="/logo.png" alt="Keypaper" className="w-16 h-16 object-contain" />
                     </div>
                     <h1 className={styles.title}>{t('auth_verify_title')}</h1>
                     <p className={styles.subtitle}>{t('auth_verify_sent')} <b>{formData.email}</b></p>
@@ -126,7 +126,7 @@ export function Signup({ onSignupSuccess, onSwitchToLogin }: SignupProps) {
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.logoSmall}>
-                    <Leaf size={32} color="var(--primary-green)" />
+                    <img src="/logo.png" alt="Keypaper" className="w-16 h-16 object-contain" />
                 </div>
                 <h1 className={styles.title}>{t('auth_title_signup')}</h1>
                 <p className={styles.subtitle}>{t('auth_subtitle_signup')}</p>
