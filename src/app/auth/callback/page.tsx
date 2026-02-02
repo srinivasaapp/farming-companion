@@ -14,7 +14,13 @@ function CallbackContent() {
     useEffect(() => {
         const handleCallback = async () => {
             const code = searchParams.get("code");
-            const next = searchParams.get("next") || "/";
+            const type = searchParams.get("type"); // recovery, invite, etc.
+            let next = searchParams.get("next") || "/";
+
+            // Force redirect to update password if it's a recovery flow
+            if (type === 'recovery') {
+                next = '/auth/update-password';
+            }
 
             if (code) {
                 const supabase = createClient();

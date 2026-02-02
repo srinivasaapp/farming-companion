@@ -332,10 +332,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return { error: { message: "You don't have a registered account. Please sign up." } };
         }
 
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+
         // Sends a password reset link to the email address
         // Redirects to /auth/update-password (we will create this or handle implicit auth)
         return await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/auth/callback?next=/auth/update-password`,
+            redirectTo: `${siteUrl}/auth/callback?next=/auth/update-password`,
         });
     };
 
