@@ -42,6 +42,7 @@ interface AuthContextType {
     signOut: () => Promise<void>;
     updateProfile: (updates: Partial<ProfileData>) => Promise<{ error: any }>;
     uploadAvatar: (file: File) => Promise<{ error: any; url?: string }>;
+    resetPasswordForEmail: (email: string) => Promise<{ error: any }>;
     showLoginModal: boolean;
     setShowLoginModal: (show: boolean) => void;
 }
@@ -60,6 +61,7 @@ const AuthContext = createContext<AuthContextType>({
     signOut: async () => { },
     updateProfile: async () => ({ error: null }),
     uploadAvatar: async () => ({ error: null }),
+    resetPasswordForEmail: async () => ({ error: null }),
     showLoginModal: false,
     setShowLoginModal: () => { },
 });
@@ -318,6 +320,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error: updateError, url: publicUrl };
     };
 
+    const resetPasswordForEmail = async (email: string) => {
+        // Sends a password reset link to the email address
+        // Redirects to /auth/update-password (we will create this or handle implicit auth)
+        // Since we are PWA/SPA, standard linking usually works if we handle the recovery event.
+        return await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${window.location.origin}`, // Redirects home, where we can detect recovery event
+        });
+    };
+
     const signIn = async (email: string, password: string) => {
         return await supabase.auth.signInWithPassword({ email, password });
     };
@@ -341,6 +352,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         <AuthContext.Provider value={{
             user, session, profile, isLoading, isRepairing, error, lang,
             setLanguage, signIn, signUp, signOut, updateProfile, uploadAvatar,
+            resetPasswordForEmail,
             showLoginModal, setShowLoginModal
         }}>
             {children}
