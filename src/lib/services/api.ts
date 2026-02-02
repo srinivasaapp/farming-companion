@@ -121,6 +121,23 @@ export async function uploadImage(file: File, bucket: string) {
     return data.publicUrl;
 }
 
+// === Auth & User Checks ===
+
+export async function checkUsername(username: string): Promise<boolean> {
+    const { count, error } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .eq('username', username);
+
+    if (error) {
+        console.error("Error checking username:", error);
+        return false; // Fail safe (allow trying, catch duplicate later if needed)
+    }
+
+    // If count is 0, username is available (true). If > 0, taken (false).
+    return count === 0;
+}
+
 // === Edit & Delete Operations ===
 
 export async function deleteQuestion(questionId: string) {
@@ -178,7 +195,7 @@ export async function getAllUsers() {
     return data || [];
 }
 
-export async function updateUserRole(userId: string, role: 'farmer' | 'expert' | 'admin') {
+export async function updateUserRole(userId: string, role: string) {
     const { data, error } = await supabase
         .from('profiles')
         .update({ role })
