@@ -14,15 +14,34 @@ export default function UpdatePasswordPage() {
     const supabase = createClient();
 
     // Ensure user is authenticated (which happens automatically via the magic link)
+    // Ensure user is authenticated (which happens automatically via the magic link)
     useEffect(() => {
-        const checkSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                // If not logged in, the link might be invalid or expired
+        // Listen for auth state changes (Recovery flow triggers SIGNED_IN then PASSWORD_RECOVERY)
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+            console.log("UpdatePasswordPage: Auth Event:", event);
+            if (session) {
+                // Session established, clear any error
+                if (message?.type === 'error') setMessage(null);
+            } else if (event === 'SIGNED_OUT') {
                 setMessage({ type: 'error', text: 'Invalid or expired reset link. Please try again.' });
             }
-        };
-        checkSession();
+        });
+
+        // Also check initial state
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (!session) {
+                // Don't show error immediately, give it a moment for the hash to parse
+                setTimeout(() => {
+                    supabase.auth.getSession().then(({ data: { session: retrySession } }) => {
+                        if (!retrySession) {
+                            setMessage({ type: 'error', text: 'Invalid or expired reset link. Please try again.' });
+                        }
+                    });
+                }, 2000);
+            }
+        });
+
+        return () => subscription.unsubscribe();
     }, [supabase]);
 
     const handleUpdatePassword = async (e: React.FormEvent) => {
