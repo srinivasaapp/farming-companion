@@ -8,12 +8,15 @@ import { Navigation } from "./Navigation";
 import styles from "./Shell.module.css";
 import { X, AlertCircle, RefreshCcw, LogOut } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { usePathname } from "next/navigation";
 
 export function Shell({ children }: { children: React.ReactNode }) {
     const {
         user, isLoading, isRepairing, error, signOut,
         showLoginModal, setShowLoginModal
     } = useAuth();
+
+    const pathname = usePathname();
 
     const [authView, setAuthView] = useState<"login" | "signup">("login");
     const [minimumSplashDone, setMinimumSplashDone] = useState(false);
@@ -58,7 +61,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
     }
 
     // 2. Booting State (Deterministic)
-    if (!minimumSplashDone || (isLoading && !isRepairing)) {
+    // EXCEPTION: Allow /auth/ pages to load immediately (e.g. Password Reset)
+    const isAuthPage = pathname?.startsWith('/auth/');
+
+    if (!isAuthPage && (!minimumSplashDone || (isLoading && !isRepairing))) {
         return <Splash onComplete={() => { }} />;
     }
 
