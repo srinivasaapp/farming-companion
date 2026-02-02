@@ -56,7 +56,8 @@ export default function MarketPage() {
         setLoading(true);
         setPageError(null);
         try {
-            const data = await getListings(activeTab);
+            // Fetch first page only for speed
+            const data = await getListings(activeTab, 0, 20);
             setListings(data as any);
         } catch (err: any) {
             console.error("MarketPage: Failed to load listings:", err.message || err);

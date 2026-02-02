@@ -51,7 +51,8 @@ export default function AskPage() {
         setLoading(true);
         setPageError(null);
         try {
-            const data = await getQuestions();
+            // Fetch first page only for speed
+            const data = await getQuestions(0, 20);
             setQuestions(data as any);
         } catch (err: any) {
             console.error("AskPage: Failed to load questions:", err.message || err);

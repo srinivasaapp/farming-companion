@@ -2,17 +2,24 @@ import { createClient } from "@/lib/supabase/client";
 
 const supabase = createClient();
 
-export async function getQuestions() {
+export async function getQuestions(page = 0, limit = 20) {
+    const from = page * limit;
+    const to = from + limit - 1;
+
     const { data, error } = await supabase
         .from('questions')
         .select(`*, profiles(full_name, username, role)`)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .range(from, to);
 
     if (error) throw error;
     return data || [];
 }
 
-export async function getListings(type: "buy" | "sell" | "rent") {
+export async function getListings(type: "buy" | "sell" | "rent", page = 0, limit = 20) {
+    const from = page * limit;
+    const to = from + limit - 1;
+
     const { data, error } = await supabase
         .from('listings')
         .select(`
@@ -26,7 +33,8 @@ export async function getListings(type: "buy" | "sell" | "rent") {
         `)
         .eq('type', type)
         .eq('status', 'active')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .range(from, to);
 
     if (error) throw error;
     return data || [];
