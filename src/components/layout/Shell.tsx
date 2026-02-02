@@ -8,14 +8,15 @@ import { Navigation } from "./Navigation";
 import styles from "./Shell.module.css";
 import { X, AlertCircle, RefreshCcw, LogOut } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthProvider";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 // import { ContextFAB } from "../common/ContextFAB";
 
 export function Shell({ children }: { children: React.ReactNode }) {
     const {
-        user, isLoading, isRepairing, error, signOut,
+        user, profile, isLoading, isRepairing, error, signOut,
         showLoginModal, setShowLoginModal
     } = useAuth();
+    const router = useRouter();
 
     const pathname = usePathname();
 
