@@ -36,18 +36,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         return () => clearTimeout(timer);
     }, []);
 
-    // Onboarding Check (Moved up to avoid Hook Order issues)
-    useEffect(() => {
-        if (!isLoading && user && profile) {
-            // Check if essential fields are missing
-            const needsOnboarding = !profile.phone || !profile.location_district;
-            const isOnboardingPage = window.location.pathname === '/onboarding';
 
-            if (needsOnboarding && !isOnboardingPage) {
-                router.replace('/onboarding');
-            }
-        }
-    }, [user, profile, isLoading, router]);
 
     // 1. Terminal Error State (Highest Priority)
     if (error) {
