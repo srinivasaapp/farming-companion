@@ -39,7 +39,7 @@ export function Navigation() {
                             className={`${styles.item} ${isActive ? styles.active : ""}`}
                         >
                             <item.icon size={24} />
-                            <span className={styles.label}>{t(item.key)}</span>
+                            {/* <span className={styles.label}>{t(item.key)}</span> */}
                         </Link>
                     );
                 })}

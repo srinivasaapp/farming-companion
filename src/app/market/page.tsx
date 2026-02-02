@@ -419,7 +419,6 @@ export default function MarketPage() {
                     </div>
                 </div>
             )}
-            )}
         </div>
     );
 }
