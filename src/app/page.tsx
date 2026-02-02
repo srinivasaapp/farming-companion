@@ -9,27 +9,58 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 pb-24">
-      {/* Top Section: Location & Profile */}
       {/* Top Section: Header & Status */}
-      {/* Top Section: Header & Status - REMOVED per request */}
-      {/* 
       <div className="bg-white sticky top-0 z-30 border-b border-gray-100 shadow-sm">
         <div className="px-4 py-3 flex items-center justify-between">
-           ...
-        </div>
-      </div>
-      */}
+          {/* Left: Brand & Time */}
+          <div className="flex flex-col">
+            <h1 className="text-xl font-black text-green-800 tracking-tight leading-none">Keypaper</h1>
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">
+              {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </span>
+          </div>
 
-      {/* Simplified Brand Strip (Optional, keeping it minimal) */}
-      <div className="px-4 py-3 bg-white border-b border-gray-100 flex justify-between items-center sticky top-0 z-30">
-        <h1 className="text-xl font-black text-green-800 tracking-tight leading-none">Keypaper</h1>
-        <div className="flex gap-2">
-          {/* Quick Actions if needed, else empty */}
-          {user && (
-            <Link href="/profile" className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-green-700">
-              <UserIcon size={16} />
-            </Link>
-          )}
+          {/* Right: Actions */}
+          <div className="flex items-center gap-2">
+            <button className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-gray-100">
+              <Search size={18} />
+            </button>
+
+            <button
+              className="h-9 px-3 rounded-full bg-gray-50 flex items-center justify-center text-gray-700 font-bold text-xs hover:bg-gray-100 transition-colors border border-gray-100"
+              onClick={() => setLanguage(lang === 'en' ? 'te' : 'en')}
+            >
+              {lang === 'en' ? 'తె' : 'En'}
+            </button>
+
+            {user ? (
+              <Link href="/profile" className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold hover:bg-green-200 border border-green-200">
+                <UserIcon size={18} />
+              </Link>
+            ) : (
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="h-9 px-4 rounded-full bg-green-600 text-white font-bold text-xs shadow-md hover:bg-green-700 transition-colors"
+              >
+                {t('profile_login')}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Sub-Header: Weather & Location */}
+        <div className="px-4 pb-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 bg-orange-50 px-2.5 py-1 rounded-full border border-orange-100">
+              <span className="text-orange-500 font-bold text-xs">28°C</span>
+              <span className="text-[10px] font-medium text-orange-700 uppercase">Sunny</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 text-gray-500">
+            <MapPin size={14} className="text-green-600" />
+            <span className="text-xs font-bold uppercase tracking-wide">Nizamabad, TS</span>
+          </div>
         </div>
       </div>
 
