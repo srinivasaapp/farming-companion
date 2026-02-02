@@ -9,6 +9,8 @@ import styles from "./Shell.module.css";
 import { X, AlertCircle, RefreshCcw, LogOut } from "lucide-react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { getTranslatedError } from "@/lib/i18n/errors";
+import { useAuth } from "@/components/providers/AuthProvider";
+import { useRouter, usePathname } from "next/navigation";
 
 export function Shell({ children }: { children: React.ReactNode }) {
     const {
