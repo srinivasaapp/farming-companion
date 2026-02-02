@@ -76,9 +76,9 @@ async function withRetry<T>(
 
     for (let i = 0; i < maxRetries; i++) {
         try {
-            // Race the operation against a timeout (30s)
+            // Race the operation against a timeout (60s)
             const timeoutPromise = new Promise<never>((_, reject) =>
-                setTimeout(() => reject(new Error("Operation timed out")), 30000)
+                setTimeout(() => reject(new Error("Operation timed out")), 60000)
             );
             return await Promise.race([operation(), timeoutPromise]);
         } catch (err: any) {
@@ -321,6 +321,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const resetPasswordForEmail = async (email: string) => {
+        // 1. Check if user exists in profiles first
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('email', email)
+            .maybeSingle();
+
+        if (!profile) {
+            return { error: { message: "You don't have a registered account. Please sign up." } };
+        }
+
         // Sends a password reset link to the email address
         // Redirects to /auth/update-password (we will create this or handle implicit auth)
         return await supabase.auth.resetPasswordForEmail(email, {

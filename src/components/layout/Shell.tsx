@@ -44,7 +44,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 <h1 className={styles.errorTitle}>Connection Delayed</h1>
                 <p className={styles.errorText}>
                     {error.includes("timed out")
-                        ? "The database is taking too long to respond. This might be a temporary network issue."
+                        ? "The database is waking up or taking too long. Please wait a moment and try again."
                         : error}
                 </p>
                 <div className={styles.errorActions}>
