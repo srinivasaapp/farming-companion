@@ -81,6 +81,19 @@ export function Shell({ children }: { children: React.ReactNode }) {
     }
 
     // ... code matching end of Shell ...
+    // Onboarding Check
+    useEffect(() => {
+        if (!isLoading && user && profile) {
+            // Check if essential fields are missing
+            const needsOnboarding = !profile.phone || !profile.location_district;
+            const isOnboardingPage = window.location.pathname === '/onboarding';
+
+            if (needsOnboarding && !isOnboardingPage) {
+                router.replace('/onboarding');
+            }
+        }
+    }, [user, profile, isLoading, router]);
+
     return (
         <div className={styles.shell}>
             {/* ... existing JSX ... */}

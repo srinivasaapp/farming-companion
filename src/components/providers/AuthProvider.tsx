@@ -140,7 +140,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                         email: authUser.email,
                         username: username.substring(0, 15), // Basic safety
                         full_name: metadata?.full_name || username,
-                        role: metadata?.role || 'farmer',
+                        role: 'user', // Default updated from 'farmer' to 'user'
                         language_preference: 'te'
                     }, { onConflict: 'id' });
             });
@@ -236,6 +236,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 } else {
                     console.log("AuthProvider: No session found (Guest Mode).");
                 }
+                // 3. Check for Onboarding
+                const isProfileComplete =
+                    initialSession.user.user_metadata?.phone ||
+                    (await supabase.from('profiles').select('phone, location_district').eq('id', initialSession.user.id).single()).data?.phone;
+
+                // We let the client-side useEffect in layout or specific pages handle redirect if needed, 
+                // OR we can do it here. A centralized check is better.
+                // For now, we just ensure `repairProfile` sets role to 'user'.
+
             } catch (err: any) {
                 console.error("AuthProvider: Initialization Failed:", err);
                 if (isMounted) setError(err.message || "Failed to initialize secure session.");
