@@ -78,7 +78,7 @@ export async function createQuestion(title: string, description: string, crop: s
             title,
             description,
             crop,
-            user_id: authorId, // Fixed column name
+            profile_id: authorId, // Trying profile_id
             image_url: imageUrl,
             is_solved: false
         })
@@ -101,7 +101,7 @@ export async function createNews(news: {
         .from('news')
         .insert({
             ...rest,
-            user_id: author_id // Fixed column name
+            profile_id: author_id // Trying profile_id
         })
         .select()
         .single();
@@ -123,7 +123,7 @@ export async function createStory(story: {
         .from('stories')
         .insert({
             ...rest,
-            user_id: author_id // Fixed column name
+            profile_id: author_id // Trying profile_id
         })
         .select()
         .single();
@@ -147,7 +147,7 @@ export async function createListing(listing: {
         .from('listings')
         .insert({
             ...rest,
-            user_id: author_id, // Fixed column name
+            profile_id: author_id, // Trying profile_id
             status: 'active'
         })
         .select()
