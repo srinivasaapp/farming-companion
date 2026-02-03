@@ -28,13 +28,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: [
-      { url: '/logo.png' },
-      { url: new URL('/favicon.ico', 'https://keypaper.in') } // Force absolute URL for favicon to avoid confusion
-    ],
-    apple: [
-      { url: '/icon-192.png' }
-    ]
+    icon: '/logo.png', // Default
+    apple: '/logo.png', // Apple touch icon
+    shortcut: '/logo.png',
   }
 };
 

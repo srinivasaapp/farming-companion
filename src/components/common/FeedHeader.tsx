@@ -63,7 +63,7 @@ export function FeedHeader({ title, uploadPath, selectedRoles, onRoleChange, var
 
     return (
         <div className={containerClasses}>
-            <div className="px-4 py-3 flex items-center justify-between pointer-events-auto">
+            <div className="px-4 py-2 flex items-center justify-between pointer-events-auto">
                 {/* Left: Upload Button */}
                 <button
                     onClick={handleUploadClick}
@@ -78,7 +78,7 @@ export function FeedHeader({ title, uploadPath, selectedRoles, onRoleChange, var
                         <img
                             src="/logo.png"
                             alt="Keypaper Logo"
-                            className="w-8 h-8 object-contain"
+                            className="w-7 h-7 object-contain"
                         />
                     </Link>
                     <h1 className={`text-lg font-bold ${titleColor}`}>{title}</h1>
