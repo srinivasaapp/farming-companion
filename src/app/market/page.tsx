@@ -39,6 +39,12 @@ export default function MarketPage() {
     const [loading, setLoading] = useState(true);
     const [pageError, setPageError] = useState<string | null>(null);
     const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
+    const [showNearMe, setShowNearMe] = useState(false);
+
+    // Filter Modal
+    const [showFilterModal, setShowFilterModal] = useState(false);
+    const [priceRange, setPriceRange] = useState<{ min?: number, max?: number }>({});
+
     const [showPostModal, setShowPostModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -57,25 +63,37 @@ export default function MarketPage() {
         setLoading(true);
         setPageError(null);
         try {
-            // Fetch first page only for speed
-            const data = await getListings(activeTab, 0, 20);
+            // Determine Location for "Near Me"
+            let userLocation = undefined;
+            if (showNearMe) {
+                // Try to get from WeatherWidget storage
+                const savedLoc = localStorage.getItem('user_location_weather');
+                if (savedLoc) {
+                    const parsed = JSON.parse(savedLoc);
+                    // Extract city name or use raw name. 
+                    // Example name: "Hyderabad, Telangana" -> "Hyderabad"
+                    userLocation = parsed.name?.split(',')[0];
+                }
+            }
+
+            const data = await getListings(activeTab, 0, 50, { // Increased limit
+                verifiedOnly: showVerifiedOnly,
+                nearLocation: userLocation,
+                minPrice: priceRange.min,
+                maxPrice: priceRange.max
+            });
             setListings(data as any);
         } catch (err: any) {
             console.error("MarketPage: Failed to load listings:", err.message || err);
             setPageError(err.message || "Failed to load marketplace listings.");
         }
         setLoading(false);
-    }, [activeTab]);
+    }, [activeTab, showVerifiedOnly, showNearMe, priceRange]); // Depend on filter states
 
     useEffect(() => {
         loadData();
     }, [loadData]);
 
-    const filteredListings = listings.filter(item => {
-        if (showVerifiedOnly && !item.profiles?.is_verified) return false;
-        if (selectedRoles.length > 0 && !selectedRoles.includes(item.profiles?.role as UserRole)) return false;
-        return true;
-    });
 
     const handleCreate = () => {
         if (!user) {
@@ -189,15 +207,69 @@ export default function MarketPage() {
                     className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border whitespace-nowrap transition-colors ${showVerifiedOnly ? 'bg-green-100 border-green-200 text-green-700' : 'bg-white border-gray-200 text-gray-600'}`}
                     onClick={() => setShowVerifiedOnly(!showVerifiedOnly)}
                 >
-                    <ShieldCheck size={14} /> {t('market_verified_only')}
+                    <ShieldCheck size={14} /> {t('market_verified_only') || "Verified Only"}
                 </button>
-                <button className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium bg-white border border-gray-200 text-gray-600 whitespace-nowrap">
-                    <MapPin size={14} /> {t('market_near_me')}
+                <button
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border whitespace-nowrap transition-colors ${showNearMe ? 'bg-green-100 border-green-200 text-green-700' : 'bg-white border-gray-200 text-gray-600'}`}
+                    onClick={() => setShowNearMe(!showNearMe)}
+                >
+                    <MapPin size={14} /> {t('market_near_me') || "Near Me"}
                 </button>
-                <button className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium bg-white border border-gray-200 text-gray-600 whitespace-nowrap">
-                    <Filter size={14} /> {t('market_filters')}
+                <button
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border whitespace-nowrap transition-colors ${(priceRange.min !== undefined || priceRange.max !== undefined) ? 'bg-green-100 border-green-200 text-green-700' : 'bg-white border-gray-200 text-gray-600'}`}
+                    onClick={() => setShowFilterModal(true)}
+                >
+                    <Filter size={14} /> {t('market_filters') || "Price Filters"}
                 </button>
             </div>
+
+            {/* Price Filter Modal at bottom of render */}
+            {showFilterModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+                    <div className="bg-white rounded-xl w-full max-w-sm p-6 shadow-xl relative">
+                        <h3 className="text-lg font-bold mb-4">Filter by Price</h3>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Min Price</label>
+                                <input
+                                    type="number"
+                                    className="w-full border rounded-lg px-3 py-2"
+                                    placeholder="0"
+                                    value={priceRange.min || ''}
+                                    onChange={e => setPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Max Price</label>
+                                <input
+                                    type="number"
+                                    className="w-full border rounded-lg px-3 py-2"
+                                    placeholder="Any"
+                                    value={priceRange.max || ''}
+                                    onChange={e => setPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))}
+                                />
+                            </div>
+                            <div className="flex gap-3 pt-2">
+                                <button
+                                    onClick={() => { setPriceRange({}); setShowFilterModal(false); }}
+                                    className="flex-1 py-2 text-gray-500 font-medium"
+                                >
+                                    Reset
+                                </button>
+                                <button
+                                    onClick={() => setShowFilterModal(false)}
+                                    className="flex-1 py-2 bg-green-600 text-white rounded-lg font-bold"
+                                >
+                                    Apply
+                                </button>
+                            </div>
+                        </div>
+                        <button onClick={() => setShowFilterModal(false)} className="absolute top-4 right-4 text-gray-400">
+                            <X size={20} />
+                        </button>
+                    </div>
+                </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4 pb-20">
                 {loading ? (
@@ -217,15 +289,20 @@ export default function MarketPage() {
                             Retry
                         </button>
                     </div>
-                ) : filteredListings.length === 0 ? (
+                ) : (listings.filter(item => selectedRoles.length === 0 || selectedRoles.includes(item.profiles?.role as UserRole))).length === 0 ? (
                     <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-400 text-center">
                         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
                             <MapPin size={24} className="opacity-40" />
                         </div>
-                        <p>{t('market_no_results') || 'No items found in this category.'}</p>
+                        <p>{t('market_no_results') || 'No items found matching criteria.'}</p>
+                        {(showVerifiedOnly || showNearMe || priceRange.min || priceRange.max) && (
+                            <button onClick={() => { setShowVerifiedOnly(false); setShowNearMe(false); setPriceRange({}) }} className="text-green-600 text-sm font-medium mt-2 underline">
+                                Clear Filters
+                            </button>
+                        )}
                     </div>
                 ) : (
-                    filteredListings.map((item) => {
+                    listings.filter(item => selectedRoles.length === 0 || selectedRoles.includes(item.profiles?.role as UserRole)).map((item) => {
                         const sellerType = item.profiles?.role === 'expert' ? t('profile_expert') : (item.profiles?.is_verified ? t('ask_solved') : 'Community');
                         return (
                             <div key={item.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">

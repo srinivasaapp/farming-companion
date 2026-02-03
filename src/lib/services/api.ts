@@ -16,11 +16,22 @@ export async function getQuestions(page = 0, limit = 20) {
     return data || [];
 }
 
-export async function getListings(type: "buy" | "sell" | "rent", page = 0, limit = 20) {
+// Modified getListings signature to accept filters
+export async function getListings(
+    type: "buy" | "sell" | "rent",
+    page = 0,
+    limit = 20,
+    filters?: {
+        verifiedOnly?: boolean;
+        nearLocation?: string; // Simple text match for now
+        minPrice?: number;
+        maxPrice?: number;
+    }
+) {
     const from = page * limit;
     const to = from + limit - 1;
 
-    const { data, error } = await supabase
+    let query = supabase
         .from('listings')
         .select(`
             *,
@@ -32,12 +43,38 @@ export async function getListings(type: "buy" | "sell" | "rent", page = 0, limit
             )
         `)
         .eq('type', type)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false })
-        .range(from, to);
+        .eq('status', 'active');
 
+    // Apply Price Filters
+    if (filters?.minPrice !== undefined) {
+        query = query.gte('price', filters.minPrice);
+    }
+    if (filters?.maxPrice !== undefined) {
+        query = query.lte('price', filters.maxPrice);
+    }
+
+    // Near Me (Location Text Match)
+    // Note: For real "Near Me", we'd need PostGIS. ensuring simple text match for MVP.
+    if (filters?.nearLocation) {
+        query = query.ilike('location_text', `%${filters.nearLocation}%`);
+    }
+
+    query = query.order('created_at', { ascending: false }).range(from, to);
+
+    const { data, error } = await query;
     if (error) throw error;
-    return data || [];
+
+    // Client-side filtering for 'verifiedOnly' because it depends on join
+    // Supabase inner join filtering is tricky without altering the return structure heavily
+    // so we filter after fetch for simplicity unless pagination breaks significantly. 
+    // Given the MVP scale, this is acceptable.
+    let result = data || [];
+
+    if (filters?.verifiedOnly) {
+        result = result.filter((item: any) => item.profiles?.is_verified);
+    }
+
+    return result;
 }
 
 export async function getNews() {
