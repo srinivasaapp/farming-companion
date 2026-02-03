@@ -216,6 +216,9 @@ export default function AskPage() {
                                     </div>
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    {/* DEBUG: Log IDs to console */}
+                                    {console.log(`Question ${q.id}: user=${user?.id}, author=${q.author_id}, match=${user?.id === q.author_id}`)}
+
                                     {user && user.id === q.author_id && (
                                         <button
                                             onClick={(e) => handleDelete(e, q.id)}
