@@ -133,13 +133,19 @@ export async function createNews(news: {
     image_url?: string;
     author_id: string;
 }) {
-    const { author_id, ...rest } = news;
+    const { author_id, summary, ...rest } = news;
+
+    // Schema mismatch fix: DB uses 'content', not 'summary'.
+    // If content is provided, use it. If not, use summary as content.
+    const payload = {
+        ...rest,
+        content: rest.content || summary,
+        profile_id: author_id
+    };
+
     const { data, error } = await supabase
         .from('news')
-        .insert({
-            ...rest,
-            profile_id: author_id
-        })
+        .insert(payload)
         .select()
         .single();
 
@@ -155,7 +161,8 @@ export async function createStory(story: {
     role: string;
     author_id: string;
 }) {
-    const { author_id, role: _role, ...rest } = story;
+    // Schema mismatch fix: Removed image_url and role as they don't exist in DB
+    const { author_id, role: _role, image_url: _ignored, ...rest } = story;
     const { data, error } = await supabase
         .from('stories')
         .insert({
