@@ -108,7 +108,7 @@ export default function StoriesPage() {
     }
 
     return (
-        <div className="flex flex-col h-screen bg-black overflow-hidden pointer-events-auto relative">
+        <div className="flex flex-col h-[calc(100dvh-65px)] bg-black overflow-hidden pointer-events-auto">
             <FeedHeader
                 title={t('nav_stories')}
                 uploadPath="/stories/upload"
@@ -116,7 +116,7 @@ export default function StoriesPage() {
                 onRoleChange={setSelectedRoles}
             />
 
-            <div className="flex-1 overflow-y-scroll snap-y snap-mandatory scroll-smooth pb-[80px]">
+            <div className="flex-1 w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth no-scrollbar">
                 {filteredItems.length === 0 ? (
                     <div className="flex items-center justify-center h-full text-gray-500">
                         <p>{t('market_no_results') || 'No stories yet.'}</p>

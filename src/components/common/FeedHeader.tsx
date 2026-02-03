@@ -12,6 +12,7 @@ interface FeedHeaderProps {
     uploadPath: string;
     selectedRoles: UserRole[];
     onRoleChange: (roles: UserRole[]) => void;
+    variant?: 'default' | 'overlay';
 }
 
 const ALL_ROLES: { value: UserRole, label: string }[] = [
@@ -23,7 +24,7 @@ const ALL_ROLES: { value: UserRole, label: string }[] = [
     { value: 'other', label: 'Other' },
 ];
 
-export function FeedHeader({ title, uploadPath, selectedRoles, onRoleChange }: FeedHeaderProps) {
+export function FeedHeader({ title, uploadPath, selectedRoles, onRoleChange, variant = 'default' }: FeedHeaderProps) {
     const router = useRouter();
     const { user, setShowLoginModal } = useAuth();
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -39,44 +40,54 @@ export function FeedHeader({ title, uploadPath, selectedRoles, onRoleChange }: F
     const toggleRole = (role: UserRole) => {
         if (selectedRoles.includes(role)) {
             const newRoles = selectedRoles.filter(r => r !== role);
-            // If empty, maybe reset to all? Or just empty means "All"?
-            // Let's say empty means "All" for UI simplicity, but I'll return empty array and let parent handle
             onRoleChange(newRoles);
         } else {
             onRoleChange([...selectedRoles, role]);
         }
     };
 
-    const isAllSelected = selectedRoles.length === 0 || selectedRoles.length === ALL_ROLES.length;
+    const isOverlay = variant === 'overlay';
+
+    // Header Styles
+    const containerClasses = isOverlay
+        ? "fixed top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 to-transparent border-none text-white pointer-events-none" // pointer-events-none to let touches pass through empty areas? Actually buttons need pointer-events-auto.
+        : "sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm text-gray-800";
+
+    // Text & Icon Colors
+    const titleColor = isOverlay ? "text-white drop-shadow-md" : "text-gray-800";
+    const buttonBg = isOverlay ? "bg-white/20 backdrop-blur-md hover:bg-white/30 text-white border border-white/20" : "bg-green-50 text-green-700 hover:bg-green-100";
+    const filterBtnBg = isOverlay
+        ? (selectedRoles.length > 0 ? "bg-white text-green-600" : "bg-white/20 backdrop-blur-md text-white hover:bg-white/30 border border-white/20")
+        : (selectedRoles.length > 0 ? "bg-blue-50 text-blue-600" : "bg-gray-50 text-gray-600 hover:bg-gray-100");
 
     return (
-        <div className="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm">
-            <div className="px-4 py-3 flex items-center justify-between">
+        <div className={containerClasses}>
+            <div className="px-4 py-3 flex items-center justify-between pointer-events-auto">
                 {/* Left: Upload Button */}
                 <button
                     onClick={handleUploadClick}
-                    className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-700 hover:bg-green-100 transition-colors"
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${buttonBg}`}
                 >
                     <Plus size={24} strokeWidth={2.5} />
                 </button>
 
                 {/* Center: Title */}
-                <h1 className="text-lg font-bold text-gray-800">{title}</h1>
+                <h1 className={`text-lg font-bold ${titleColor}`}>{title}</h1>
 
                 {/* Right: Filter Button */}
-                <div className="relative">
+                <div className="relative pointer-events-auto">
                     <button
                         onClick={() => setIsFilterOpen(!isFilterOpen)}
-                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${selectedRoles.length > 0 ? 'bg-blue-50 text-blue-600' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'}`}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${filterBtnBg}`}
                     >
-                        <Filter size={20} />
+                        <Filter size={isOverlay ? 20 : 20} />
                     </button>
 
                     {/* Filter Dropdown */}
                     {isFilterOpen && (
                         <>
                             <div className="fixed inset-0 z-40" onClick={() => setIsFilterOpen(false)} />
-                            <div className="absolute right-0 top-12 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 py-2 animate-in fade-in zoom-in-95 duration-200">
+                            <div className="absolute right-0 top-12 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 py-2 animate-in fade-in zoom-in-95 duration-200 text-gray-800">
                                 <div className="px-4 py-2 border-b border-gray-50 mb-1">
                                     <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Filter by Role</span>
                                 </div>
@@ -103,15 +114,15 @@ export function FeedHeader({ title, uploadPath, selectedRoles, onRoleChange }: F
                 </div>
             </div>
 
-            {/* Active Filters Bar (Optional, if any selected) */}
+            {/* Active Filters Bar */}
             {selectedRoles.length > 0 && (
-                <div className="px-4 pb-2 flex gap-2 overflow-x-auto no-scrollbar">
+                <div className="px-4 pb-2 flex gap-2 overflow-x-auto no-scrollbar pointer-events-auto">
                     {selectedRoles.map(role => (
-                        <span key={role} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 capitalize">
+                        <span key={role} className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${isOverlay ? "bg-white text-green-700" : "bg-blue-50 text-blue-700"}`}>
                             {role}
                         </span>
                     ))}
-                    <button onClick={() => onRoleChange([])} className="text-[10px] text-gray-400 underline ml-auto whitespace-nowrap">Clear All</button>
+                    <button onClick={() => onRoleChange([])} className={`text-[10px] underline ml-auto whitespace-nowrap ${isOverlay ? "text-white/80" : "text-gray-400"}`}>Clear All</button>
                 </div>
             )}
         </div>
