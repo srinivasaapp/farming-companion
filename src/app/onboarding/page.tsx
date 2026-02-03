@@ -157,7 +157,7 @@ export default function OnboardingPage() {
                                             type="tel"
                                             value={formData.phone}
                                             onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none"
+                                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none text-gray-900 bg-white"
                                             placeholder="+91 9876543210"
                                         />
                                     </div>
@@ -171,7 +171,7 @@ export default function OnboardingPage() {
                                             type="text"
                                             value={formData.location_district}
                                             onChange={e => setFormData({ ...formData, location_district: e.target.value })}
-                                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none"
+                                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none text-gray-900 bg-white"
                                             placeholder="e.g. Hyderabad"
                                         />
                                     </div>

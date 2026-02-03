@@ -8,13 +8,25 @@ interface MediaUploaderProps {
     accept?: "image" | "video" | "both";
     label?: string;
     showPreview?: boolean;
+    initialPreview?: string;
 }
 
-export function MediaUploader({ onFileSelect, accept = "both", label = "Upload Media", showPreview = true }: MediaUploaderProps) {
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-    const [fileType, setFileType] = useState<"image" | "video" | null>(null);
+export function MediaUploader({ onFileSelect, accept = "both", label = "Upload Media", showPreview = true, initialPreview }: MediaUploaderProps) {
+    const [previewUrl, setPreviewUrl] = useState<string | null>(initialPreview || null);
+    const [fileType, setFileType] = useState<"image" | "video" | null>(initialPreview ? 'image' : null); // Default to image if preview exists
     const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Sync initialPreview changes (e.g. when switching slides)
+    React.useEffect(() => {
+        if (initialPreview) {
+            setPreviewUrl(initialPreview);
+            setFileType('image'); // Assumption for carousel usage
+        } else {
+            setPreviewUrl(null);
+            setFileType(null);
+        }
+    }, [initialPreview]);
 
     const handleFile = (file: File) => {
         if (!file) return;

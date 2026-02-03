@@ -16,6 +16,7 @@ export default function StoriesPage() {
     const [stories, setStories] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeStoryId, setActiveStoryId] = useState<string | null>(null);
+    const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
     const [storyToDelete, setStoryToDelete] = useState<string | null>(null);
 
@@ -42,13 +43,21 @@ export default function StoriesPage() {
         }
     }, [loading, stories, activeStoryId]);
 
+    // Reset slide index when changing stories
+    useEffect(() => {
+        setCurrentSlideIndex(0);
+    }, [activeStoryId]);
+
     // Intersection Observer to track active story
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        setActiveStoryId(entry.target.getAttribute('data-story-id'));
+                        const newId = entry.target.getAttribute('data-story-id');
+                        if (newId && newId !== activeStoryId) {
+                            setActiveStoryId(newId);
+                        }
                     }
                 });
             },
@@ -122,33 +131,88 @@ export default function StoriesPage() {
                         <p>{t('market_no_results') || 'No stories yet.'}</p>
                     </div>
                 ) : (
-                    filteredItems.map((story) => (
-                        <div
-                            key={story.id}
-                            data-story-id={story.id}
-                            className="story-container w-full h-full p-2 snap-center flex items-center justify-center relative group"
-                        >
-                            {/* Container for the story card ensures proper spacing */}
-                            <GravityStory
-                                src={story.src || story.image_url} // Fallback to image if src missing
-                                title={story.title}
-                                expert={story.profiles?.full_name || "Unknown"}
-                                soilPh={story.soil_ph || "N/A"}
-                                pestInfo={story.pest_info || "N/A"}
-                                isActive={story.id === activeStoryId}
-                            />
+                    filteredItems.map((item) => {
+                        const isOwner = user && (user.id === item.profile_id); // Changed from author_id to profile_id
+                        const isActive = activeStoryId === item.id;
 
-                            {/* Owner Delete Button - Moved to Left */}
-                            {user && user.id === story.profile_id && (
-                                <button
-                                    className="absolute top-6 left-6 z-50 p-3 bg-red-600/80 text-white rounded-full hover:bg-red-700 transition-colors backdrop-blur-sm shadow-lg border border-red-500"
-                                    onClick={(e) => handleDeleteClick(e, story.id)}
+                        // Parse Slides
+                        let slides: { url: string, type: 'image' | 'video', caption?: string }[] = [];
+                        try {
+                            if (item.src && (item.src.startsWith('[') || item.src.startsWith('{'))) {
+                                const parsed = JSON.parse(item.src);
+                                slides = Array.isArray(parsed) ? parsed : [parsed];
+                            } else {
+                                slides = [{ url: item.src, type: 'video', caption: item.title }];
+                            }
+                        } catch (e) {
+                            slides = [{ url: item.src, type: 'video', caption: item.title }];
+                        }
+
+                        return (
+                            <div
+                                key={item.id}
+                                data-story-id={item.id}
+                                className="story-container w-full h-full p-2 snap-center flex items-center justify-center relative group"
+                            >
+                                {/* Horizontal Carousel */}
+                                <div
+                                    className="w-full h-full flex overflow-x-scroll snap-x snap-mandatory no-scrollbar"
+                                    onScroll={(e) => {
+                                        if (!isActive) return;
+                                        const el = e.currentTarget;
+                                        const index = Math.round(el.scrollLeft / el.clientWidth);
+                                        if (index !== currentSlideIndex) setCurrentSlideIndex(index);
+                                    }}
                                 >
-                                    <Trash2 size={24} />
-                                </button>
-                            )}
-                        </div>
-                    ))
+                                    {slides.map((slide, idx) => {
+                                        const isSlideActive = isActive && currentSlideIndex === idx;
+
+                                        return (
+                                            <div key={idx} className="w-full h-full snap-center shrink-0 relative bg-black">
+                                                {slide.type === 'image' ? (
+                                                    <div className="w-full h-full relative">
+                                                        <img
+                                                            src={slide.url}
+                                                            alt={slide.caption || item.title}
+                                                            className="w-full h-full object-contain"
+                                                        />
+                                                        {/* Caption Overlay for Image */}
+                                                        <div className="absolute bottom-0 left-0 right-0 p-4 pt-20 bg-gradient-to-t from-black/90 to-transparent">
+                                                            <h2 className="text-white font-bold text-lg">{slide.caption || item.title}</h2>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <GravityStory
+                                                        src={slide.url}
+                                                        title={slide.caption || item.title}
+                                                        expert={(item.profiles as any)?.full_name || 'Farmer'}
+                                                        isActive={isSlideActive}
+                                                    />
+                                                )}
+
+                                                {/* Global Slide Indicator */}
+                                                {slides.length > 1 && (
+                                                    <div className="absolute top-4 right-4 z-40 bg-black/50 backdrop-blur-md px-2 py-1 rounded-full text-[10px] text-white font-bold border border-white/10">
+                                                        {idx + 1}/{slides.length}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Delete/Owner Controls (Absolute to the whole Story ROW, not slide) */}
+                                {isOwner && (
+                                    <button
+                                        onClick={(e) => handleDeleteClick(e, item.id)}
+                                        className="absolute top-16 right-4 z-50 p-2 bg-red-600/20 text-red-500 hover:bg-red-600 hover:text-white rounded-full backdrop-blur-md transition-colors"
+                                    >
+                                        <Trash2 size={20} />
+                                    </button>
+                                )}
+                            </div>
+                        );
+                    })
                 )}
 
                 {/* Spacer at bottom for last item visibility over nav */}

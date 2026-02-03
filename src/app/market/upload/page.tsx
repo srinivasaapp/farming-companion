@@ -86,7 +86,7 @@ export default function UploadMarketPage() {
                         <label className="block text-sm font-bold text-gray-700 mb-1">Item Name</label>
                         <input
                             type="text"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900 bg-white"
                             placeholder="e.g. Tractor 45HP"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
@@ -99,7 +99,7 @@ export default function UploadMarketPage() {
                             <label className="block text-sm font-bold text-gray-700 mb-1">Price (₹)</label>
                             <input
                                 type="number"
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900 bg-white"
                                 placeholder="0"
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
@@ -109,7 +109,7 @@ export default function UploadMarketPage() {
                         <div>
                             <label className="block text-sm font-bold text-gray-700 mb-1">Unit</label>
                             <select
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900"
                                 value={unit}
                                 onChange={(e) => setUnit(e.target.value)}
                             >
@@ -127,7 +127,7 @@ export default function UploadMarketPage() {
                             <MapPin size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                             <input
                                 type="text"
-                                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900 bg-white"
                                 placeholder="Your District/Mandal"
                                 value={location}
                                 onChange={(e) => setLocation(e.target.value)}
@@ -139,7 +139,7 @@ export default function UploadMarketPage() {
                     <div>
                         <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
                         <textarea
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 h-32 resize-none"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 h-32 resize-none text-gray-900 bg-white"
                             placeholder="Condition, age, specifications..."
                             value={desc}
                             onChange={(e) => setDesc(e.target.value)}

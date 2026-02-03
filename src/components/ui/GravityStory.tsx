@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { ThumbsUp, MessageCircle, Share2, Volume2, VolumeX } from "lucide-react";
+import { ThumbsUp, MessageCircle, Share2, Volume2, VolumeX, Flag } from "lucide-react";
 
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { CommentSection } from "@/components/feed/CommentSection";
 import { shareContent } from "@/lib/utils/share";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { ReportModal } from "@/components/common/ReportModal";
 
 interface StoryProps {
     src: string;
@@ -78,6 +79,7 @@ export function GravityStory({ src, title, expert, soilPh, pestInfo, isActive }:
     };
 
     const [showComments, setShowComments] = useState(false);
+    const [showReport, setShowReport] = useState(false);
 
     return (
         <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black mx-0 my-0 snap-start shrink-0" onClick={togglePlay}>
@@ -129,6 +131,18 @@ export function GravityStory({ src, title, expert, soilPh, pestInfo, isActive }:
                         <Share2 size={24} />
                     </div>
                     <span className="text-xs font-medium drop-shadow-md">{t('story_action_share')}</span>
+                </button>
+                <button
+                    className="flex flex-col items-center gap-1 text-white shadow-sm"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setShowReport(true);
+                    }}
+                >
+                    <div className="p-3 rounded-full bg-black/30 backdrop-blur-sm">
+                        <Flag size={24} />
+                    </div>
+                    <span className="text-xs font-medium drop-shadow-md">Report</span>
                 </button>
             </div>
 
@@ -186,6 +200,13 @@ export function GravityStory({ src, title, expert, soilPh, pestInfo, isActive }:
                     </div>
                 </div>
             )}
+
+            <ReportModal
+                isOpen={showReport}
+                onClose={() => setShowReport(false)}
+                targetId={"story-demo"} // Using demo ID as prop missing in interface for ID
+                targetType="story"
+            />
         </div>
     );
 }

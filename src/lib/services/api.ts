@@ -430,3 +430,29 @@ export async function createNotification(notification: {
 
     if (error) throw error;
 }
+
+// === Reporting ===
+
+export async function createReport(report: {
+    target_id: string;
+    target_type: 'question' | 'listing' | 'news' | 'story' | 'comment' | 'user';
+    reason: string;
+    description: string;
+    reporter_id: string;
+}) {
+    const { data, error } = await supabase
+        .from('reports')
+        .insert({
+            ...report,
+            status: 'pending'
+        })
+        .select()
+        .single();
+
+    if (error) {
+        //If table doesn't exist, we fallback to just logging for now or throwing
+        console.error("Report submission failed (Table might be missing)", error);
+        throw error;
+    }
+    return data;
+}

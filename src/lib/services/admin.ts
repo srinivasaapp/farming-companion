@@ -38,3 +38,31 @@ export async function updateUserVerification(userId: string, isVerified: boolean
     if (error) throw error;
     return data;
 }
+
+export async function getReports() {
+    const { data, error } = await supabase
+        .from('reports')
+        .select(`
+            *,
+            reporter:profiles!reports_reporter_id_fkey(full_name, username)
+        `)
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error("Fetch reports failed", error);
+        return [];
+    }
+    return data || [];
+}
+
+export async function resolveReport(reportId: string, status: 'resolved' | 'dismissed', adminNotes?: string) {
+    const { data, error } = await supabase
+        .from('reports')
+        .update({ status, admin_notes: adminNotes })
+        .eq('id', reportId)
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
+}
