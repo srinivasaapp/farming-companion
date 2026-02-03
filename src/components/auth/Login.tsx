@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./Login.module.css";
-import { Leaf, ArrowRight } from "lucide-react";
+import { Leaf, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
@@ -12,6 +12,7 @@ interface LoginProps {
 export function Login({ onLogin, onSwitchToSignup }: LoginProps) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const { signIn, resetPasswordForEmail } = useAuth();
     const { t } = useLanguage();
@@ -109,15 +110,22 @@ export function Login({ onLogin, onSwitchToSignup }: LoginProps) {
                                             Forgot password?
                                         </button>
                                     </label>
-                                    <div className={styles.inputGroup}>
+                                    <div className={`${styles.inputGroup} relative`}>
                                         <input
-                                            type="password"
+                                            type={showPassword ? "text" : "password"}
                                             className={styles.input}
                                             placeholder="******"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             required
                                         />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                                        >
+                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
                                     </div>
                                 </div>
                             )}

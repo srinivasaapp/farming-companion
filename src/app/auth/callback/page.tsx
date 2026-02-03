@@ -20,6 +20,9 @@ function CallbackContent() {
             // Force redirect to update password if it's a recovery flow
             if (type === 'recovery') {
                 next = '/auth/update-password';
+            } else if (type === 'signup' || type === 'email' || type === 'invite') {
+                // Determine if this is a verification link
+                next = '/auth/verified';
             }
 
             if (code) {

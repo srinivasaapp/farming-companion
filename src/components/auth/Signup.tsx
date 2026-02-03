@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import styles from "./Login.module.css";
-import { Leaf, ArrowRight, Loader2, Check, ShieldCheck, Globe, Users } from "lucide-react";
+import { Leaf, ArrowRight, Loader2, Check, ShieldCheck, Globe, Users, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { Turnstile } from '@marsidev/react-turnstile';
@@ -22,6 +22,8 @@ export function Signup({ onSignupSuccess, onSwitchToLogin }: SignupProps) {
         confirmPassword: "",
         phone: "" // Optional
     });
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -274,27 +276,45 @@ export function Signup({ onSignupSuccess, onSwitchToLogin }: SignupProps) {
                         <div className="grid grid-cols-2 gap-3">
                             <div>
                                 <label className={styles.label}>{t('auth_password')}</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    className={styles.input}
-                                    placeholder="******"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    required
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        className={styles.input}
+                                        placeholder="******"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                                    >
+                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    </button>
+                                </div>
                             </div>
                             <div>
                                 <label className={styles.label}>{t('auth_confirm_password')}</label>
-                                <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    className={styles.input}
-                                    placeholder="******"
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                    required
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        name="confirmPassword"
+                                        className={styles.input}
+                                        placeholder="******"
+                                        value={formData.confirmPassword}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                                    >
+                                        {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
