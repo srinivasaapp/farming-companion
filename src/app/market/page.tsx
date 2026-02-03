@@ -12,6 +12,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { getListings, createListing, uploadImage, deleteListing } from "@/lib/services/api";
 import { X } from "lucide-react";
 import { getOptimizedImageUrl } from "@/lib/utils/image";
+import { useToast } from "@/components/providers/ToastProvider";
 
 interface Listing {
     id: string;
@@ -111,17 +112,25 @@ export default function MarketPage() {
         }
     };
 
-    const handleDelete = async (e: React.MouseEvent, id: string) => {
-        e.stopPropagation();
-        if (!confirm(t('generic_confirm_delete') || "Are you sure?")) return;
+    const { showToast } = useToast();
+    const [listingToDelete, setListingToDelete] = useState<string | null>(null);
 
+    const handleDelete = (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        setListingToDelete(id);
+    };
+
+    const confirmDelete = async () => {
+        if (!listingToDelete) return;
         try {
-            await deleteListing(id);
+            await deleteListing(listingToDelete);
             // Optimistic update
-            setListings(prev => prev.filter(l => l.id !== id));
+            setListings(prev => prev.filter(l => l.id !== listingToDelete));
+            showToast("Listing deleted", "success");
+            setListingToDelete(null);
         } catch (err) {
             console.error("Failed to delete", err);
-            alert("Failed to delete");
+            showToast("Failed to delete", "error");
         }
     };
 
@@ -500,6 +509,32 @@ export default function MarketPage() {
                                 {isSubmitting ? t('generic_loading') : t('market_post_listing')}
                             </button>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {listingToDelete && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setListingToDelete(null)}>
+                    <div className="bg-white rounded-2xl p-6 w-[85%] max-w-sm shadow-2xl transform scale-100 animate-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">Delete Listing?</h3>
+                        <p className="text-gray-500 mb-6 text-sm">
+                            Are you sure you want to delete this listing? This action cannot be undone.
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setListingToDelete(null)}
+                                className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmDelete}
+                                className="flex-1 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-200"
+                            >
+                                Delete
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

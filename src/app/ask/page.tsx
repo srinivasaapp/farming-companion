@@ -92,15 +92,22 @@ export default function AskPage() {
         }
     };
 
-    const handleDelete = async (e: React.MouseEvent, id: string) => {
+    const [questionToDelete, setQuestionToDelete] = useState<string | null>(null);
+
+    const handleDelete = (e: React.MouseEvent, id: string) => {
         e.stopPropagation();
-        if (!confirm(t('generic_confirm_delete') || "Are you sure?")) return;
+        setQuestionToDelete(id);
+    };
+
+    const confirmDelete = async () => {
+        if (!questionToDelete) return;
 
         try {
-            await deleteQuestion(id);
+            await deleteQuestion(questionToDelete);
             // Optimistic update
-            setQuestions(prev => prev.filter(q => q.id !== id));
+            setQuestions(prev => prev.filter(q => q.id !== questionToDelete));
             showToast("Question deleted", "success");
+            setQuestionToDelete(null);
         } catch (err) {
             console.error("Failed to delete", err);
             showToast("Failed to delete", "error");
@@ -410,6 +417,32 @@ export default function AskPage() {
                                 {isSubmitting ? t('generic_loading') : t('ask_button')}
                             </button>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {questionToDelete && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setQuestionToDelete(null)}>
+                    <div className="bg-white rounded-2xl p-6 w-[85%] max-w-sm shadow-2xl transform scale-100 animate-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">Delete Question?</h3>
+                        <p className="text-gray-500 mb-6 text-sm">
+                            Are you sure you want to delete this question? This action cannot be undone.
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setQuestionToDelete(null)}
+                                className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmDelete}
+                                className="flex-1 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-200"
+                            >
+                                Delete
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
