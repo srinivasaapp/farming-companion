@@ -40,7 +40,7 @@ export function DashboardWidgets() {
             {/* Personalization Header */}
             <div className="mb-2">
                 <h2 className="text-xl font-bold text-gray-800">
-                    {getGreeting()}, <span className="text-green-700">{profile?.full_name?.split(' ')[0] || user?.user_metadata?.full_name?.split(' ')[0] || "Farmer"}</span>
+                    {getGreeting()}, <span className="text-green-700">{profile?.full_name?.split(' ')[0] || user?.user_metadata?.full_name?.split(' ')[0] || t('profile_farmer')}</span>
                 </h2>
                 <p className="text-xs text-gray-500 font-medium">
                     {t('dashboard_welcome_subtitle') || "Ready to grow something great today?"}

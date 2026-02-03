@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { CloudSun, MapPin, Search, Navigation, X, Loader2, Cloud, Sun, CloudRain, CloudFog, CloudSnow, CloudLightning } from "lucide-react";
 import { getWeather, searchCity, getPincodeDetails, WeatherData, LocationResult } from "@/lib/services/weather";
 import { useToast } from "@/components/providers/ToastProvider";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
 const STORAGE_KEY = 'user_location_weather';
 
@@ -14,6 +15,7 @@ interface SavedLocation {
 }
 
 export function WeatherWidget() {
+    const { t } = useLanguage();
     const { showToast } = useToast();
     const [weather, setWeather] = useState<WeatherData | null>(null);
     const [location, setLocation] = useState<SavedLocation | null>(null);
@@ -70,7 +72,9 @@ export function WeatherWidget() {
             },
             (error) => {
                 console.error("Geo error:", error);
-                showToast("Failed to get location. Please search manually.", "error");
+                console.error("Geo error:", error);
+                showToast("Failed to get location. Please search manually.", "error"); // Keep toast english or add toast keys later? Leaving as is for error message
+                setSearchLoading(false);
                 setSearchLoading(false);
             }
         );
@@ -133,13 +137,13 @@ export function WeatherWidget() {
     };
 
     const getWeatherLabel = (code: number) => {
-        if (code === 0) return "Sunny";
-        if (code <= 3) return "Cloudy";
-        if (code <= 48) return "Foggy";
-        if (code <= 67) return "Rainy";
-        if (code <= 77) return "Snow";
-        if (code >= 95) return "Stormy";
-        return "Unknown";
+        if (code === 0) return t('weather_sunny');
+        if (code <= 3) return t('weather_cloudy');
+        if (code <= 48) return t('weather_foggy');
+        if (code <= 67) return t('weather_rainy');
+        if (code <= 77) return t('weather_snow');
+        if (code >= 95) return t('weather_stormy');
+        return t('weather_unknown');
     };
 
     // --- Render ---
@@ -150,7 +154,7 @@ export function WeatherWidget() {
                 <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => location ? setIsEditing(false) : null} />
                 <div className="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden relative z-10 animate-in fade-in zoom-in-95 duration-200">
                     <div className="p-4 border-b border-gray-100 flex justify-between items-center">
-                        <h3 className="font-bold text-gray-800">Set Location</h3>
+                        <h3 className="font-bold text-gray-800">{t('weather_set_location')}</h3>
                         {location && <button onClick={() => setIsEditing(false)}><X size={20} className="text-gray-400" /></button>}
                     </div>
 
@@ -161,7 +165,7 @@ export function WeatherWidget() {
                             disabled={searchLoading}
                         >
                             {searchLoading && query === "" ? <Loader2 className="animate-spin" size={18} /> : <Navigation size={18} />}
-                            Use My Current Location
+                            {t('weather_use_current')}
                         </button>
 
                         <div className="relative">
@@ -170,7 +174,7 @@ export function WeatherWidget() {
                             </div>
                             <input
                                 className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500"
-                                placeholder="Enter City or Pincode (e.g. 500001)"
+                                placeholder={t('weather_search_placeholder')}
                                 value={query}
                                 onChange={e => handleSearch(e.target.value)}
                                 autoFocus
@@ -179,7 +183,7 @@ export function WeatherWidget() {
 
                         <div className="max-h-60 overflow-y-auto space-y-1">
                             {searchLoading && query.length >= 3 && (
-                                <div className="text-center py-4 text-gray-400 text-xs">Searching...</div>
+                                <div className="text-center py-4 text-gray-400 text-xs">{t('weather_searching')}</div>
                             )}
 
                             {searchResults.map((res, idx) => (
@@ -197,7 +201,7 @@ export function WeatherWidget() {
                             ))}
 
                             {!searchLoading && query.length >= 3 && searchResults.length === 0 && (
-                                <div className="text-center py-4 text-gray-400 text-xs">No results found</div>
+                                <div className="text-center py-4 text-gray-400 text-xs">{t('weather_no_results')}</div>
                             )}
                         </div>
                     </div>
@@ -221,7 +225,7 @@ export function WeatherWidget() {
                             </div>
                         </>
                     ) : (
-                        <span className="text-xs text-orange-400 font-medium px-1">Weather...</span>
+                        <span className="text-xs text-orange-400 font-medium px-1">{t('weather_loading')}</span>
                     )}
                 </div>
             </div>
@@ -229,7 +233,7 @@ export function WeatherWidget() {
             <div className="flex items-center gap-1.5 text-gray-500 cursor-pointer hover:text-green-600 transition-colors">
                 <MapPin size={14} className="text-green-600" />
                 <span className="text-xs font-bold uppercase tracking-wide max-w-[150px] truncate">
-                    {location ? location.name : "Select Location"}
+                    {location ? location.name : t('weather_suggest_location')}
                 </span>
             </div>
         </div>

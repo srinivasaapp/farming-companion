@@ -106,6 +106,12 @@ export const translations = {
         stories_view_all: 'View All Stories',
         stories_new_badge: 'New',
 
+        // Dashboard Greetings
+        greeting_morning: 'Good Morning',
+        greeting_afternoon: 'Good Afternoon',
+        greeting_evening: 'Good Evening',
+        dashboard_welcome_subtitle: 'Ready to grow something great today?',
+
         // Account Menu
         menu_my_activity: 'My Activity',
         menu_saved_items: 'Saved Items',
@@ -171,6 +177,35 @@ export const translations = {
         comment_voice_note: 'Voice Note',
         comment_view_replies: 'View Replies',
         comment_hide_replies: 'Hide Replies',
+
+        // Weather Widget
+        weather_suggest_location: 'Select Location',
+        weather_use_current: 'Use My Current Location',
+        weather_set_location: 'Set Location',
+        weather_search_placeholder: 'Enter City or Pincode (e.g. 500001)',
+        weather_searching: 'Searching...',
+        weather_no_results: 'No results found',
+        weather_sunny: 'Sunny',
+        weather_cloudy: 'Cloudy',
+        weather_foggy: 'Foggy',
+        weather_rainy: 'Rainy',
+        weather_snow: 'Snow',
+        weather_stormy: 'Stormy',
+        weather_unknown: 'Unknown',
+        weather_loading: 'Weather...',
+
+        // Global Search
+        search_placeholder: 'Search for crops, pests, market prices...',
+        search_app_results: 'App Results',
+        search_global_option: 'Search Web',
+        search_global_desc: 'Find external resources, images, and guides',
+        search_no_app_results: 'No results found in app.',
+        search_min_chars: 'Type at least 2 characters to search across the app.',
+
+        // Home Page
+        home_mandi_update: 'Mandi Update',
+        home_footer_copyright: 'copyright 2026 @ keypaper.in',
+
 
     },
     te: {
@@ -278,6 +313,12 @@ export const translations = {
         stories_view_all: 'అన్ని కథలను వీక్షించండి',
         stories_new_badge: 'కొత్తది',
 
+        // Dashboard Greetings
+        greeting_morning: 'శుభోదయం',
+        greeting_afternoon: 'శుభ మధ్యాహ్నం',
+        greeting_evening: 'శుభ సాయంత్రం',
+        dashboard_welcome_subtitle: 'ఈ రోజు గొప్పగా ఏదైనా పండించడానికి సిద్ధంగా ఉన్నారా?',
+
         // Account Menu
         menu_my_activity: 'నా కార్యకలాపాలు',
         menu_saved_items: 'సేవ్ చేసిన అంశాలు',
@@ -343,6 +384,35 @@ export const translations = {
         comment_voice_note: 'వాయిస్ నోట్',
         comment_view_replies: 'సమాధానాలు చూడండి',
         comment_hide_replies: 'సమాధానాలు దాచండి',
+
+        // Weather Widget
+        weather_suggest_location: 'స్థలం ఎంచుకోండి',
+        weather_use_current: 'నా ప్రస్తుత స్థానాన్ని ఉపయోగించండి',
+        weather_set_location: 'స్థానాన్ని సెట్ చేయండి',
+        weather_search_placeholder: 'నగరం లేదా పిన్‌కోడ్ నమోదు చేయండి (ఉదా. 500001)',
+        weather_searching: 'వెతుకుతోంది...',
+        weather_no_results: 'ఫలితాలు కనుగొనబడలేదు',
+        weather_sunny: 'ఎండగా',
+        weather_cloudy: 'మేఘావృతం',
+        weather_foggy: 'పొగమంచు',
+        weather_rainy: 'వర్షం',
+        weather_snow: 'మంచు',
+        weather_stormy: 'తుఫాను',
+        weather_unknown: 'తెలియదు',
+        weather_loading: 'వాతావరణం...',
+
+        // Global Search
+        search_placeholder: 'పంటలు, తెగుళ్లు, మార్కెట్ ధరలు వెతకండి...',
+        search_app_results: 'యాప్ ఫలితాలు',
+        search_global_option: 'వెబ్‌లో వెతకండి',
+        search_global_desc: 'బాహ్య వనరులు, చిత్రాలు మరియు మార్గదర్శకాలను కనుగొనండి',
+        search_no_app_results: 'యాప్‌లో ఫలితాలు ఏవీ దొరకలేదు.',
+        search_min_chars: 'యాప్‌లో వెతకడానికి కనీసం 2 అక్షరాలను టైప్ చేయండి.',
+
+        // Home Page
+        home_mandi_update: 'మండి సమాచారం',
+        home_footer_copyright: 'కాపీరైట్ 2026 @ keypaper.in',
+
 
     }
 };

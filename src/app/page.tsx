@@ -62,7 +62,7 @@ export default function HomePage() {
       {/* Quick Updates Ticker */}
       <div className="bg-gradient-to-r from-green-50 via-emerald-50 to-green-50 px-4 py-3 border-b border-green-100 flex items-center gap-3 overflow-hidden">
         <div className="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase shrink-0">
-          Mandi Update
+          {t('home_mandi_update')}
         </div>
         <p className="text-xs text-green-900 truncate font-medium">
           Tomato prices up by 12% in Hyderabad market today. Check new listings.
@@ -73,7 +73,7 @@ export default function HomePage() {
       <div className="p-4 space-y-6">
         <DashboardWidgets />
         <div className="text-center text-xs text-gray-400 py-4 mt-auto">
-          copyright 2026 @ keypaper.in
+          {t('home_footer_copyright')}
         </div>
       </div>
 

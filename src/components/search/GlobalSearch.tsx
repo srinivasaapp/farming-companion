@@ -73,7 +73,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                         ref={inputRef}
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search for crops, pests, market prices..."
+                        placeholder={t('search_placeholder')}
                         className="w-full bg-gray-50 text-gray-900 px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/20"
                     />
                     {loading && (
@@ -89,7 +89,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                 {query.length < 2 ? (
                     <div className="flex flex-col items-center justify-center h-48 text-gray-400 text-center px-8">
                         <Search size={48} className="opacity-20 mb-4" />
-                        <p className="text-sm">Type at least 2 characters to search across the app.</p>
+                        <p className="text-sm">{t('search_min_chars')}</p>
                     </div>
                 ) : (
                     <div className="space-y-1">
@@ -97,7 +97,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                         {results.length > 0 && (
                             <div className="mb-4">
                                 <div className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                                    App Results
+                                    {t('search_app_results')}
                                 </div>
                                 {results.map((item) => (
                                     <Link
@@ -126,14 +126,14 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
 
                         {results.length === 0 && !loading && (
                             <div className="bg-gray-50 rounded-xl p-8 text-center mb-4">
-                                <p className="text-sm text-gray-500">No results found in app.</p>
+                                <p className="text-sm text-gray-500">{t('search_no_app_results')}</p>
                             </div>
                         )}
 
                         {/* Global Search Option */}
                         <div className="mt-2">
                             <div className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                                Global Search
+                                {t('search_global_option')}
                             </div>
                             <button
                                 onClick={handleWebSearch}
@@ -143,8 +143,8 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                                     <Globe size={20} />
                                 </div>
                                 <div>
-                                    <h4 className="font-medium text-blue-700">Search Web for "{query}"</h4>
-                                    <p className="text-xs text-gray-500">Find external resources, images, and guides</p>
+                                    <h4 className="font-medium text-blue-700">{t('search_global_option')} "{query}"</h4>
+                                    <p className="text-xs text-gray-500">{t('search_global_desc')}</p>
                                 </div>
                             </button>
                         </div>
