@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { FeedHeader, UserRole } from "@/components/common/FeedHeader";
-import { AntiGravityCard } from "@/components/ui/AntiGravityCard";
-import { Loader2, ThumbsUp, MessageCircle, Share2, Lock, Trash2, PenSquare } from "lucide-react";
+import { Loader2, ThumbsUp, MessageCircle, Share2, Trash2, PenSquare } from "lucide-react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { CommentSection } from "@/components/feed/CommentSection";
@@ -171,15 +170,15 @@ export default function LearnPage() {
 
     if (loading) {
         return (
-            <div className="flex flex-col min-h-screen bg-gray-100 pb-20 items-center justify-center">
-                <Loader2 className="animate-spin text-green-600" size={32} />
-                <p className="text-gray-500 mt-2 text-sm">{t('generic_loading')}</p>
+            <div className="flex flex-col min-h-screen bg-black text-white items-center justify-center">
+                <Loader2 className="animate-spin text-white" size={32} />
+                <p className="text-gray-400 mt-2 text-sm">{t('generic_loading')}</p>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-100 pb-20 relative">
+        <div className="flex flex-col h-screen bg-black overflow-hidden pointer-events-auto relative">
             <FeedHeader
                 title={t('nav_learn')}
                 uploadPath="/learn/upload"
@@ -187,9 +186,9 @@ export default function LearnPage() {
                 onRoleChange={setSelectedRoles}
             />
 
-            <div className="flex flex-col gap-3 p-3">
+            <div className="flex-1 overflow-y-scroll snap-y snap-mandatory scroll-smooth">
                 {filteredItems.length === 0 ? (
-                    <div className="text-center py-20 text-gray-400">
+                    <div className="flex items-center justify-center h-full text-gray-500">
                         <p>{t('market_no_results') || 'No articles found.'}</p>
                     </div>
                 ) : (
@@ -201,84 +200,108 @@ export default function LearnPage() {
                         const isOwner = user && (user.id === item.author_id || user.id === item.profile_id || profile?.role === 'admin');
 
                         return (
-                            <div key={item.id} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col gap-3 relative group">
-                                {item.image_url && (
-                                    <div className="h-48 rounded-xl overflow-hidden bg-gray-100 w-full">
+                            <div key={item.id} className="w-full h-full snap-start relative flex-shrink-0 bg-black">
+                                {/* Background Image */}
+                                {item.image_url ? (
+                                    <div className="absolute inset-0 w-full h-full">
                                         <img
-                                            src={getOptimizedImageUrl(item.image_url, 600)}
+                                            src={getOptimizedImageUrl(item.image_url, 800)}
                                             alt={item.title}
+                                            className="w-full h-full object-cover opacity-80"
                                             loading="lazy"
-                                            className="w-full h-full object-cover"
                                         />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                                    </div>
+                                ) : (
+                                    <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-green-900 to-black flex items-center justify-center">
+                                        <span className="text-white/20 text-6xl font-bold">Learn</span>
                                     </div>
                                 )}
-                                <div>
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider ${isExpert ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
+
+                                {/* Floating Edit/Delete Actions (Top Left or Right) */}
+                                {isOwner && (
+                                    <div className="absolute top-4 right-4 flex flex-col gap-3 z-20">
+                                        <button
+                                            onClick={(e) => handleEdit(e, item.id)}
+                                            className="p-3 bg-black/40 text-white hover:bg-white/20 backdrop-blur-md rounded-full transition-all border border-white/10"
+                                            title="Edit"
+                                        >
+                                            <PenSquare size={20} />
+                                        </button>
+                                        <button
+                                            onClick={(e) => handleDeleteClick(e, item.id)}
+                                            className="p-3 bg-red-600/80 text-white hover:bg-red-700 backdrop-blur-md rounded-full transition-all border border-red-500/50"
+                                            title="Delete"
+                                        >
+                                            <Trash2 size={20} />
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* Content Overlay (Bottom) */}
+                                <div className="absolute bottom-0 left-0 right-0 p-6 pb-24 flex flex-col gap-3 z-10 text-white">
+                                    <div className="flex items-center gap-2">
+                                        <span className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider ${isExpert ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'
                                             }`}>
                                             {isExpert ? 'Expert Article' : `${role} Post`}
                                         </span>
-
-                                        {/* Edit/Delete Actions */}
-                                        {isOwner && (
-                                            <div className="flex items-center gap-1 bg-gray-50 rounded-lg p-1">
-                                                <button
-                                                    onClick={(e) => handleEdit(e, item.id)}
-                                                    className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-                                                    title="Edit"
-                                                >
-                                                    <PenSquare size={16} />
-                                                </button>
-                                                <button
-                                                    onClick={(e) => handleDeleteClick(e, item.id)}
-                                                    className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                                                    title="Delete"
-                                                >
-                                                    <Trash2 size={16} />
-                                                </button>
-                                            </div>
-                                        )}
+                                        <span className="text-white/70 text-xs">• {new Date(item.created_at).toLocaleDateString()}</span>
                                     </div>
-                                    <h2 className="text-xl font-bold text-gray-900 leading-tight mb-2">{item.title}</h2>
-                                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+
+                                    <h2 className="text-2xl font-bold leading-tight shadow-black drop-shadow-md">{item.title}</h2>
+
+                                    <div className="text-white/90 text-sm leading-relaxed line-clamp-3 text-shadow-sm">
                                         {safeRender(item.summary || item.content)}
-                                    </p>
+                                    </div>
+
+                                    {/* Action Bar */}
+                                    <div className="flex items-center justify-between pt-2 mt-2 border-t border-white/10">
+                                        <div className="flex items-center gap-2 text-xs font-medium text-white/80">
+                                            <span className="text-green-400 font-bold">{helpfuls[item.id] || 0}</span> {t('learn_helpful_count')}
+                                        </div>
+                                        <div className="flex gap-4">
+                                            <button
+                                                className={`flex items-center gap-1.5 transition-colors ${isHelpful[item.id] ? 'text-green-400' : 'text-white hover:text-green-400'
+                                                    }`}
+                                                onClick={() => handleInteraction('helpful', item.id)}
+                                            >
+                                                <ThumbsUp size={24} fill={isHelpful[item.id] ? "currentColor" : "none"} />
+                                            </button>
+
+                                            <button
+                                                className={`transition-colors ${activeArticleId === item.id ? 'text-blue-400' : 'text-white hover:text-blue-400'}`}
+                                                onClick={() => handleInteraction('comment', item.id)}
+                                            >
+                                                <MessageCircle size={24} />
+                                            </button>
+
+                                            <button
+                                                className="text-white hover:text-gray-300 transition-colors"
+                                                onClick={() => handleInteraction('share', item.id)}
+                                            >
+                                                <Share2 size={24} />
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div className="flex items-center justify-between pt-3 border-t border-gray-50 mt-1">
-                                    <div className="flex items-center gap-1 text-xs text-gray-400 font-medium">
-                                        <span className="text-green-600 font-bold">{helpfuls[item.id] || 0}</span> {t('learn_helpful_count')}
-                                    </div>
-                                    <div className="flex gap-3">
-                                        <button
-                                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors ${isHelpful[item.id] ? 'bg-green-100 text-green-700' : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
-                                                }`}
-                                            onClick={() => handleInteraction('helpful', item.id)}
-                                        >
-                                            <ThumbsUp size={16} fill={isHelpful[item.id] ? "currentColor" : "none"} />
-                                            <span className="text-xs font-bold">{t('learn_action_helpful')}</span>
-                                        </button>
-
-                                        <button
-                                            className={`p-2 rounded-full transition-colors ${activeArticleId === item.id ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'}`}
-                                            onClick={() => handleInteraction('comment', item.id)}
-                                        >
-                                            <MessageCircle size={18} />
-                                        </button>
-
-                                        <button
-                                            className="p-2 rounded-full text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors"
-                                            onClick={() => handleInteraction('share', item.id)}
-                                        >
-                                            <Share2 size={18} />
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Comments Section */}
+                                {/* Comments Drawer (conditional) */}
                                 {activeArticleId === item.id && (
-                                    <div className="pt-2 animate-in slide-in-from-top duration-200">
-                                        <CommentSection postId={item.id} authorId={item.author_id} postType="news" />
+                                    <div className="absolute inset-x-0 bottom-0 top-[40%] bg-white rounded-t-3xl z-30 flex flex-col shadow-2xl animate-in slide-in-from-bottom duration-300">
+                                        <div className="flex justify-center p-2" onClick={() => setActiveArticleId(null)}>
+                                            <div className="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+                                        </div>
+                                        <div className="flex-1 overflow-y-auto p-4">
+                                            <CommentSection postId={item.id} authorId={item.author_id} postType="news" />
+                                        </div>
+                                        <button
+                                            onClick={() => setActiveArticleId(null)}
+                                            className="absolute top-4 right-4 p-2 bg-gray-100 rounded-full"
+                                        >
+                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M1 1L11 11M1 11L11 1" stroke="#666" strokeWidth="2" strokeLinecap="round" />
+                                            </svg>
+                                        </button>
                                     </div>
                                 )}
                             </div>

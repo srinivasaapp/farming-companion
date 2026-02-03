@@ -20,28 +20,6 @@ export default function ProfilePage() {
     });
     const [saving, setSaving] = useState(false);
 
-    // If we have a user but no profile and no error, it means profile is still fetching in background
-    if (user && !profile && !error) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="flex flex-col items-center gap-2">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-                    <p className="text-gray-400 text-sm">Loading profile...</p>
-                </div>
-            </div>
-        );
-    }
-
-    if (!profile) {
-        return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4 text-center">
-                <p className="text-gray-500 mb-2">Profile data unavailable.</p>
-                {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-2 rounded">{error}</p>}
-                <button onClick={() => window.location.reload()} className="px-4 py-2 bg-green-600 text-white rounded-lg">Retry</button>
-                <button onClick={signOut} className="mt-4 text-sm text-gray-500 underline">Sign Out</button>
-            </div>
-        );
-    }
     // Initialize form data when profile loads
     useEffect(() => {
         if (profile) {
