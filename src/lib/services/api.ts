@@ -322,7 +322,7 @@ export async function getComments(postId: string) {
         .from('comments')
         .select(`
             *,
-            profiles!comments_author_id_fkey (
+            profiles (
                 full_name,
                 username
             )
@@ -352,7 +352,7 @@ export async function createComment(comment: {
         .insert(comment)
         .select(`
              *,
-            profiles!comments_author_id_fkey (
+            profiles (
                 full_name,
                 username
             )

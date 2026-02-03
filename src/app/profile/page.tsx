@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
 export default function ProfilePage() {
-    const { user, profile, updateProfile, uploadAvatar, signOut, isLoading } = useAuth();
+    const { user, profile, updateProfile, uploadAvatar, signOut, isLoading, error } = useAuth();
     const router = useRouter();
     const { t } = useLanguage();
 
@@ -20,6 +20,16 @@ export default function ProfilePage() {
     });
     const [saving, setSaving] = useState(false);
 
+    if (!profile) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4 text-center">
+                <p className="text-gray-500 mb-2">Profile data unavailable.</p>
+                {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-2 rounded">{error}</p>}
+                <button onClick={() => window.location.reload()} className="px-4 py-2 bg-green-600 text-white rounded-lg">Retry</button>
+                <button onClick={signOut} className="mt-4 text-sm text-gray-500 underline">Sign Out</button>
+            </div>
+        );
+    }
     // Initialize form data when profile loads
     useEffect(() => {
         if (profile) {
