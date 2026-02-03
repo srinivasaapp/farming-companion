@@ -8,7 +8,7 @@ export async function getQuestions(page = 0, limit = 20) {
 
     const { data, error } = await supabase
         .from('questions')
-        .select(`*, profiles(full_name, username, role)`)
+        .select(`*, profiles!questions_profile_id_fkey(full_name, username, role)`)
         .order('created_at', { ascending: false })
         .range(from, to);
 
@@ -24,7 +24,7 @@ export async function getListings(type: "buy" | "sell" | "rent", page = 0, limit
         .from('listings')
         .select(`
             *,
-            profiles (
+            profiles!listings_profile_id_fkey (
                 full_name,
                 role,
                 is_verified,
@@ -118,7 +118,7 @@ export async function createStory(story: {
     role: string;
     author_id: string;
 }) {
-    const { author_id, role, ...rest } = story;
+    const { author_id, role: _role, ...rest } = story;
     const { data, error } = await supabase
         .from('stories')
         .insert({
@@ -207,6 +207,24 @@ export async function deleteListing(listingId: string) {
         .from('listings')
         .delete()
         .eq('id', listingId);
+
+    if (error) throw error;
+}
+
+export async function deleteNews(newsId: string) {
+    const { error } = await supabase
+        .from('news')
+        .delete()
+        .eq('id', newsId);
+
+    if (error) throw error;
+}
+
+export async function deleteStory(storyId: string) {
+    const { error } = await supabase
+        .from('stories')
+        .delete()
+        .eq('id', storyId);
 
     if (error) throw error;
 }

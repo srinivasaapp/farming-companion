@@ -10,6 +10,15 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import { getQuestions, createQuestion, uploadImage, deleteQuestion } from "@/lib/services/api";
 import { shareContent } from "@/lib/utils/share";
 
+const safeRender = (content: string | { text: string } | null | undefined) => {
+    if (typeof content === 'string') return content;
+    if (typeof content === 'object' && content !== null) {
+        // @ts-ignore - Dynamic Supabase JSON content
+        return content.text || JSON.stringify(content);
+    }
+    return String(content || "");
+};
+
 interface Question {
     id: string;
     title: string;
@@ -53,7 +62,7 @@ export default function AskPage() {
         try {
             // Fetch first page only for speed
             const data = await getQuestions(0, 20);
-            setQuestions(data as any);
+            setQuestions(data as unknown as Question[]);
         } catch (err: any) {
             console.error("AskPage: Failed to load questions:", err.message || err);
             setPageError(err.message || "Failed to load community questions.");
@@ -222,7 +231,7 @@ export default function AskPage() {
                             </div>
                             <div className={styles.content}>
                                 <h3 className={styles.questionTitle}>{q.title}</h3>
-                                <p className={styles.questionPreview}>{q.description}</p>
+                                <p className={styles.questionPreview}>{safeRender(q.description)}</p>
                                 {q.image_url && (
                                     <div style={{ marginTop: '8px', borderRadius: '12px', overflow: 'hidden', height: '200px', width: '100%' }}>
                                         <img src={q.image_url} alt="Question Attachment" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />

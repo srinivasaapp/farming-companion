@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { ThumbsUp, MessageCircle, Share2, Volume2, VolumeX } from "lucide-react";
 
 import { useLanguage } from "@/components/providers/LanguageProvider";
@@ -14,15 +14,34 @@ interface StoryProps {
     expert: string;
     soilPh?: string;
     pestInfo?: string;
+    isActive: boolean;
 }
 
-export function GravityStory({ src, title, expert, soilPh, pestInfo }: StoryProps) {
+export function GravityStory({ src, title, expert, soilPh, pestInfo, isActive }: StoryProps) {
     const { t } = useLanguage();
     const { user, setShowLoginModal } = useAuth();
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [isMuted, setIsMuted] = useState(true);
+    const [isMuted, setIsMuted] = useState(false);
     const [likes, setLikes] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
+
+    useEffect(() => {
+        if (videoRef.current) {
+            if (isActive) {
+                // Reset to beginning if it ended? Or just play.
+                // Usually shorts resume.
+                const playPromise = videoRef.current.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Auto-play prevented:", error);
+                    });
+                }
+            } else {
+                videoRef.current.pause();
+                // Optional: videoRef.current.currentTime = 0; // if we want to reset
+            }
+        }
+    }, [isActive]);
 
     const togglePlay = () => {
         if (videoRef.current) {
@@ -61,14 +80,13 @@ export function GravityStory({ src, title, expert, soilPh, pestInfo }: StoryProp
     const [showComments, setShowComments] = useState(false);
 
     return (
-        <div className="relative w-full h-[calc(100vh-130px)] rounded-2xl overflow-hidden bg-black mx-0 my-0 snap-start shrink-0" onClick={togglePlay}>
+        <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black mx-0 my-0 snap-start shrink-0" onClick={togglePlay}>
             <video
                 ref={videoRef}
                 src={src}
                 className="w-full h-full object-cover"
                 loop
                 muted={isMuted}
-                autoPlay
                 playsInline
             />
 
@@ -125,9 +143,23 @@ export function GravityStory({ src, title, expert, soilPh, pestInfo }: StoryProp
                         <span className="bg-white/20 backdrop-blur-md text-white/90 text-[10px] px-2 py-0.5 rounded-full border border-white/10">{t('story_badge_expert')}</span>
                     </div>
                     <h2 className="text-white font-bold text-lg leading-snug drop-shadow-lg mb-1">{title}</h2>
-                    <p className="text-white/80 text-sm line-clamp-2 drop-shadow-md">
+                    <p className="text-white/80 text-sm line-clamp-2 drop-shadow-md mb-2">
                         This is a sample description for the story. Swipe up to see more tips and tricks for better yield.
                     </p>
+                    <div className="flex gap-2">
+                        {soilPh && (
+                            <div className="bg-black/40 backdrop-blur-sm px-2 py-1 rounded-lg border border-white/10 flex flex-col">
+                                <span className="text-[10px] text-gray-300 uppercase font-bold">Soil pH</span>
+                                <span className="text-xs text-white font-medium">{soilPh}</span>
+                            </div>
+                        )}
+                        {pestInfo && (
+                            <div className="bg-black/40 backdrop-blur-sm px-2 py-1 rounded-lg border border-white/10 flex flex-col">
+                                <span className="text-[10px] text-red-300 uppercase font-bold">Pest Alert</span>
+                                <span className="text-xs text-white font-medium">{pestInfo}</span>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 

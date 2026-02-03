@@ -51,8 +51,17 @@ export default function ProfilePage() {
         }
     };
 
-    if (isLoading || !profile) {
+    if (isLoading) {
         return <div className="min-h-screen flex items-center justify-center bg-gray-50">Loading...</div>;
+    }
+
+    if (!profile) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4 text-center">
+                <p className="text-gray-500 mb-4">Profile data unavailable.</p>
+                <button onClick={() => window.location.reload()} className="px-4 py-2 bg-green-600 text-white rounded-lg">Retry</button>
+            </div>
+        );
     }
 
     return (

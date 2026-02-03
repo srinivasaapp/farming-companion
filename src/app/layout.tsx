@@ -10,6 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://keypaper.in'),
   title: "Keypaper",
   description: "From soil to sale – all farming in one app",
   manifest: "/manifest.json",
@@ -20,6 +21,11 @@ export const metadata: Metadata = {
   },
   formatDetection: {
     telephone: false,
+  },
+  verification: {
+    other: {
+      "msvalidate.01": "DC4A1292E06C1C2C47EBEF08AEC6B468",
+    },
   },
   icons: {
     icon: [

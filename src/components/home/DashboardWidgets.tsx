@@ -4,6 +4,8 @@ import { CloudSun, TrendingUp, Lightbulb, BookOpen, MessageCircle } from "lucide
 import Link from "next/link";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
+import { getOptimizedImageUrl } from "@/lib/utils/image";
+
 export function DashboardWidgets() {
     const { t } = useLanguage();
     return (
@@ -38,7 +40,11 @@ export function DashboardWidgets() {
             <div className="relative">
                 <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 snap-x">
                     <Link href="/stories" className="min-w-[140px] h-[200px] bg-gray-900 rounded-xl relative overflow-hidden snap-start shrink-0">
-                        <img src="https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover opacity-80" />
+                        <img
+                            src={getOptimizedImageUrl("https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&q=80&w=400", 200)}
+                            className="w-full h-full object-cover opacity-80"
+                            loading="lazy"
+                        />
                         <div className="absolute bottom-2 left-2 text-white">
                             <div className="bg-red-500 text-[10px] font-bold px-1.5 py-0.5 rounded inline-block mb-1">{t('stories_new_badge')}</div>
                             <div className="text-xs font-bold leading-tight">{t('stories_planting_tips')}</div>
@@ -46,7 +52,11 @@ export function DashboardWidgets() {
                     </Link>
                     <Link href="/stories" className="min-w-[140px] h-[200px] bg-gray-900 rounded-xl relative overflow-hidden snap-start shrink-0">
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10"></div>
-                        <img src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover opacity-80" />
+                        <img
+                            src={getOptimizedImageUrl("https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=400", 200)}
+                            className="w-full h-full object-cover opacity-80"
+                            loading="lazy"
+                        />
                         <div className="absolute bottom-2 left-2 text-white z-20">
                             <div className="text-xs font-bold leading-tight">{t('stories_harvest_guide')}</div>
                         </div>

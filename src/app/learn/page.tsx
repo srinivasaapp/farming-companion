@@ -3,12 +3,74 @@
 import { useState, useEffect } from "react";
 import { FeedHeader, UserRole } from "@/components/common/FeedHeader";
 import { AntiGravityCard } from "@/components/ui/AntiGravityCard";
-import { Loader2, ThumbsUp, MessageCircle, Share2, Lock } from "lucide-react";
+import { Loader2, ThumbsUp, MessageCircle, Share2, Lock, Trash2 } from "lucide-react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { CommentSection } from "@/components/feed/CommentSection";
 import { shareContent } from "@/lib/utils/share";
 import { getOptimizedImageUrl } from "@/lib/utils/image";
+
+// Define Interface for News/Article
+interface NewsItem {
+    id: string;
+    title: string;
+    summary?: string;
+    content?: string | { text: string } | any[];
+    image_url?: string;
+    created_at: string;
+    author_id: string;
+    profiles?: {
+        full_name: string;
+        username: string;
+        role: string;
+    };
+}
+
+const safeRender = (content: any): React.ReactNode => {
+    if (!content) return "";
+
+    // 1. Array handling
+    if (Array.isArray(content)) {
+        return content.map((block: any, index: number) => {
+            if (block && typeof block === 'object' && 'text' in block && typeof block.text === 'string') {
+                return (
+                    <span key={index} className="block mb-2">
+                        {block.text}
+                    </span>
+                );
+            }
+            return (
+                <span key={index} className="block mb-2 text-xs text-gray-500 font-mono">
+                    {typeof block === 'string' ? block : JSON.stringify(block)}
+                </span>
+            );
+        });
+    }
+
+    // 2. Handle Single Object
+    if (typeof content === 'object') {
+        if ('text' in content && typeof content.text === 'string') {
+            return content.text;
+        }
+        return JSON.stringify(content);
+    }
+
+    // 3. Handle String (check for JSON)
+    if (typeof content === 'string') {
+        const trimmed = content.trim();
+        if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+            try {
+                const parsed = JSON.parse(content);
+                return safeRender(parsed);
+            } catch (e) {
+                return content;
+            }
+        }
+        return content;
+    }
+
+    return String(content);
+};
 
 export default function LearnPage() {
     const { t } = useLanguage();
@@ -18,7 +80,7 @@ export default function LearnPage() {
     const [helpfuls, setHelpfuls] = useState<Record<string, number>>({ 'e1': 24, 'u1': 12 });
     const [isHelpful, setIsHelpful] = useState<Record<string, boolean>>({});
 
-    const [articles, setArticles] = useState<any[]>([]);
+    const [articles, setArticles] = useState<NewsItem[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -124,7 +186,7 @@ export default function LearnPage() {
                                     </div>
                                     <h2 className="text-xl font-bold text-gray-900 leading-tight mb-2">{item.title}</h2>
                                     <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                                        {item.summary || item.content}
+                                        {safeRender(item.summary || item.content)}
                                     </p>
                                 </div>
 

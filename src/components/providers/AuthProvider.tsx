@@ -76,9 +76,9 @@ async function withRetry<T>(
 
     for (let i = 0; i < maxRetries; i++) {
         try {
-            // Race the operation against a timeout (60s)
+            // Race the operation against a timeout (15s)
             const timeoutPromise = new Promise<never>((_, reject) =>
-                setTimeout(() => reject(new Error("Operation timed out")), 60000)
+                setTimeout(() => reject(new Error("Operation timed out")), 15000)
             );
             return await Promise.race([operation(), timeoutPromise]);
         } catch (err: any) {
@@ -121,7 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             if (fetchError) throw fetchError;
             return data as ProfileData;
-        }, 3, 2000); // 3 retries, starting at 2s delay
+        }, 2, 1000); // 2 retries, starting at 1s delay
     }, [supabase]);
 
     const repairProfile = useCallback(async (authUser: User) => {
@@ -211,6 +211,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         let isMounted = true;
 
+        // FAILSAFE: Force unlock after 12s no matter what happens in the async flow.
+        // This guarantees the Splash screen will disappear even if the network hangs or logic errors.
+        const failsafeTimer = setTimeout(() => {
+            if (isMounted) {
+                console.warn("AuthProvider: Failsafe triggered. Forcing app unlock.");
+                setIsLoading((prev) => {
+                    if (prev) return false;
+                    return prev;
+                });
+            }
+        }, 12000);
+
         const initialize = async () => {
             if (initializeCalled.current) return;
             initializeCalled.current = true;
@@ -240,14 +252,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 // Ignore AbortError which happens on component unmount/remount in StrictMode
                 if (err.name === 'AbortError' || err.message?.includes('aborted')) {
                     console.log("AuthProvider: Init aborted (benign).");
-                    return;
+                    // Do NOT return here, let it fall through to finally to ensure loading state is cleared if needed
+                } else {
+                    console.error("AuthProvider: Initialization Failed:", err);
+                    if (isMounted) setError(err.message || "Failed to initialize secure session.");
                 }
-
-                console.error("AuthProvider: Initialization Failed:", err);
-                if (isMounted) setError(err.message || "Failed to initialize secure session.");
             } finally {
                 // 3. UNBLOCK: Immediately let the app load
                 console.log("AuthProvider: Initialization Complete (Shell Unlocked).");
+                clearTimeout(failsafeTimer); // Cleanup failsafe
                 if (isMounted) setIsLoading(false);
             }
         };

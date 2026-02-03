@@ -118,7 +118,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 {children}
             </main>
             {/* <ContextFAB /> - Removed in favor of FeedHeader */}
-            <Navigation />
+
         </div>
     );
 }
