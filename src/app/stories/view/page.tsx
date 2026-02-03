@@ -1,16 +1,15 @@
 "use client";
 
-import React, { Suspense, useEffect, useState, use } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { GravityStory } from "@/components/ui/GravityStory";
 import { useLanguage } from "@/components/providers/LanguageProvider";
-import { getStories } from "@/lib/services/api"; // We might need getStory(id) but for now let's find it from list or fetch all.
-// Actually, for a detail page, we should fetch just one. But api.ts doesn't have getStory(id) yet.
-// I'll update api.ts later if needed, but for now I can fetch all and find, or just mock if not found.
-// Better to fetch all for now as getStories is available.
+import { getStories } from "@/lib/services/api";
 import { Loader2, ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-function StoryDetailContent({ id }: { id: string }) {
+function StoryDetailContent() {
+    const searchParams = useSearchParams();
+    const id = searchParams.get('id');
     const { t } = useLanguage();
     const router = useRouter();
     const [story, setStory] = useState<any>(null);
@@ -19,10 +18,10 @@ function StoryDetailContent({ id }: { id: string }) {
     useEffect(() => {
         async function load() {
             try {
-                // Ideally we have getStory(id). For now, let's re-use getStories and find.
-                // In a real app we'd add getStory(id) to api.ts. 
-                // Since I can't edit api.ts easily without potentially breaking other things (though I should),
-                // I will fetch all. 
+                if (!id) {
+                    setLoading(false);
+                    return;
+                }
                 const stories = await getStories();
                 const found = stories.find((s: any) => s.id === id);
                 setStory(found);
@@ -72,12 +71,10 @@ function StoryDetailContent({ id }: { id: string }) {
     );
 }
 
-export default function StoryDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = use(params);
-
+export default function StoryDetailPage() {
     return (
         <Suspense fallback={<div className="flex h-screen items-center justify-center bg-black"><Loader2 className="animate-spin text-white" /></div>}>
-            <StoryDetailContent id={id} />
+            <StoryDetailContent />
         </Suspense>
     );
 }

@@ -54,7 +54,7 @@ export default function NewsListPage() {
                 ) : (
                     newsList.map((item) => (
                         <Link
-                            href={`/news/${item.id}`}
+                            href={`/news/view?id=${item.id}`}
                             key={item.id}
                             className="block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
                         >

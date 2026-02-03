@@ -60,7 +60,7 @@ export function DashboardWidgets() {
                         stories.map((story) => (
                             <Link
                                 key={story.id}
-                                href={`/stories/${story.id}`}
+                                href={`/stories/view?id=${story.id}`}
                                 className="min-w-[140px] h-[200px] bg-gray-900 rounded-xl relative overflow-hidden snap-start shrink-0"
                             >
                                 <img

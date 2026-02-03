@@ -1,16 +1,11 @@
 "use client";
 
-import React, { useEffect, useState, Suspense, use } from "react";
-// Since this is a new file, we need to locate where styles was imported from or just use inline/Tailwind.
-// The previous file imported styles from "./page.module.css". I should check if that file exists relative to the new location.
-// It will be "../page.module.css" if I put it in [id] folder, or I can copy the css module.
-// For simplicity and "one news per page" request, I will try to reuse the existing CSS or refactor to Tailwind if possible, 
-// but reusing the module is safer for preserving the look.
+import React, { useEffect, useState, Suspense } from "react";
 import styles from "../page.module.css";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { getNewsItem } from "@/lib/services/api";
 import { Share2, MessageCircle, ThumbsUp, ArrowLeft, X, Loader2, Calendar } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { shareContent } from "@/lib/utils/share";
 
 // Mock Fallback for invalid IDs
@@ -30,7 +25,9 @@ const mockNews = {
     created_at: new Date().toISOString()
 };
 
-function NewsDetailContent({ id }: { id: string }) {
+function NewsDetailContent() {
+    const searchParams = useSearchParams();
+    const id = searchParams.get('id');
     const { t } = useLanguage();
     const router = useRouter();
     const [item, setItem] = useState<any>(null);
@@ -167,15 +164,10 @@ function NewsDetailContent({ id }: { id: string }) {
     );
 }
 
-export default function NewsDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    // Unwrap params using React.use() for Next.js 15+ compatibility if needed, 
-    // or just await it if it's a server component. But this is "use client".
-    // In Next.js 15 client components, params is a promise.
-    const { id } = use(params);
-
+export default function NewsDetailPage() {
     return (
         <Suspense fallback={<div className="flex h-screen items-center justify-center"><Loader2 className="animate-spin" /></div>}>
-            <NewsDetailContent id={id} />
+            <NewsDetailContent />
         </Suspense>
     );
 }
