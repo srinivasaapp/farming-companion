@@ -84,7 +84,7 @@ export function GravityStory({ src, title, expert, soilPh, pestInfo, isActive }:
             <video
                 ref={videoRef}
                 src={src}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain bg-black"
                 loop
                 muted={isMuted}
                 playsInline
