@@ -58,15 +58,15 @@ export default function AskQuestionPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-20">
-            <div className="bg-white px-4 py-3 border-b border-gray-100 sticky top-0 z-30 flex items-center gap-3">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 pb-20">
+            <div className="bg-white dark:bg-slate-900 px-4 py-3 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-30 flex items-center gap-3">
                 <button
                     onClick={() => router.back()}
                     className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-600"
                 >
                     <ArrowLeft size={20} />
                 </button>
-                <h1 className="text-lg font-bold text-gray-900">Ask the Community</h1>
+                <h1 className="text-lg font-bold text-gray-900 dark:text-white">Ask the Community</h1>
             </div>
 
             <form onSubmit={handleUpload} className="p-4 space-y-6 max-w-lg mx-auto">
@@ -76,9 +76,9 @@ export default function AskQuestionPage() {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">Your Question</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Your Question</label>
                     <textarea
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 h-32 resize-none text-lg"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 h-32 resize-none text-lg dark:text-white bg-white dark:bg-slate-800"
                         placeholder="What's causing these spots on my leaves?"
                         autoFocus
                         value={question}
@@ -88,9 +88,9 @@ export default function AskQuestionPage() {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">Category</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Category</label>
                     <select
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-900 dark:text-white"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                     >

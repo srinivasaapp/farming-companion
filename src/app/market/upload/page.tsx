@@ -62,15 +62,15 @@ export default function UploadMarketPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-20">
-            <div className="bg-white px-4 py-3 border-b border-gray-100 sticky top-0 z-30 flex items-center gap-3">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 pb-20">
+            <div className="bg-white dark:bg-slate-900 px-4 py-3 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-30 flex items-center gap-3">
                 <button
                     onClick={() => router.back()}
                     className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-600"
                 >
                     <ArrowLeft size={20} />
                 </button>
-                <h1 className="text-lg font-bold text-gray-900">Sell Item</h1>
+                <h1 className="text-lg font-bold text-gray-900 dark:text-white">Sell Item</h1>
             </div>
 
             <form onSubmit={handleUpload} className="p-4 space-y-6 max-w-lg mx-auto">
@@ -83,10 +83,10 @@ export default function UploadMarketPage() {
 
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Item Name</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Item Name</label>
                         <input
                             type="text"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900 bg-white"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900 dark:text-white bg-white dark:bg-slate-800"
                             placeholder="e.g. Tractor 45HP"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
@@ -96,10 +96,10 @@ export default function UploadMarketPage() {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Price (₹)</label>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Price (₹)</label>
                             <input
                                 type="number"
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900 bg-white"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900 dark:text-white bg-white dark:bg-slate-800"
                                 placeholder="0"
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
@@ -107,9 +107,9 @@ export default function UploadMarketPage() {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-1">Unit</label>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Unit</label>
                             <select
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900 dark:text-white"
                                 value={unit}
                                 onChange={(e) => setUnit(e.target.value)}
                             >
@@ -122,12 +122,12 @@ export default function UploadMarketPage() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Location</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Location</label>
                         <div className="relative">
                             <MapPin size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                             <input
                                 type="text"
-                                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900 bg-white"
+                                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-900 dark:text-white bg-white dark:bg-slate-800"
                                 placeholder="Your District/Mandal"
                                 value={location}
                                 onChange={(e) => setLocation(e.target.value)}
@@ -137,9 +137,9 @@ export default function UploadMarketPage() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Description</label>
                         <textarea
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 h-32 resize-none text-gray-900 bg-white"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 h-32 resize-none text-gray-900 dark:text-white bg-white dark:bg-slate-800"
                             placeholder="Condition, age, specifications..."
                             value={desc}
                             onChange={(e) => setDesc(e.target.value)}

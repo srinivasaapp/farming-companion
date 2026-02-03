@@ -6,11 +6,14 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Camera, LogOut, Save, MapPin, User, Phone, Clock, Bookmark, Bell, HelpCircle, FileText, Shield, ShieldCheck, AlertTriangle, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { useTheme } from "@/components/providers/ThemeProvider";
+import { Moon, Sun } from "lucide-react";
 
 export default function ProfilePage() {
     const { user, profile, updateProfile, uploadAvatar, signOut, isLoading, error } = useAuth();
     const router = useRouter();
     const { t } = useLanguage();
+    const { theme, setTheme } = useTheme();
 
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
@@ -194,6 +197,46 @@ export default function ProfilePage() {
                         Edit Profile Details
                     </button>
                 )}
+
+                {/* App Settings */}
+                <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-3">
+                    <div className="bg-gray-50 px-4 py-2 border-b border-gray-100">
+                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">App Settings</span>
+                    </div>
+                    <div className="p-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${theme === 'dark' ? 'bg-slate-800 text-yellow-400' : 'bg-blue-50 text-blue-600'}`}>
+                                    {theme === 'dark' ? <Moon size={20} /> : <Sun size={20} />}
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-gray-900 text-sm">Dark Mode</h3>
+                                    <p className="text-gray-500 text-xs">Adjust appearance</p>
+                                </div>
+                            </div>
+                            <div className="flex bg-gray-100 p-1 rounded-full">
+                                <button
+                                    onClick={() => setTheme('light')}
+                                    className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${theme === 'light' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500'}`}
+                                >
+                                    Light
+                                </button>
+                                <button
+                                    onClick={() => setTheme('dark')}
+                                    className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${theme === 'dark' ? 'bg-slate-800 shadow-sm text-white' : 'text-gray-500'}`}
+                                >
+                                    Dark
+                                </button>
+                                <button
+                                    onClick={() => setTheme('system')}
+                                    className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${theme === 'system' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500'}`}
+                                >
+                                    Auto
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Admin Access */}
                 {profile.role === 'admin' && (

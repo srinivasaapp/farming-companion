@@ -51,6 +51,8 @@ import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ToastProvider } from "@/components/providers/ToastProvider";
 import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
 
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -68,7 +70,9 @@ export default function RootLayout({
           <AuthProvider>
             <LanguageProvider>
               <ToastProvider>
-                <Shell>{children}</Shell>
+                <ThemeProvider defaultTheme="system" storageKey="app-theme">
+                  <Shell>{children}</Shell>
+                </ThemeProvider>
               </ToastProvider>
             </LanguageProvider>
           </AuthProvider>

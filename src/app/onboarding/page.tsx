@@ -105,8 +105,8 @@ export default function OnboardingPage() {
     if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-gray-50"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div></div>;
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-            <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex flex-col items-center justify-center p-4">
+            <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-2xl shadow-xl overflow-hidden">
                 <div className="h-2 bg-gray-100">
                     <div
                         className="h-full bg-green-600 transition-all duration-300"
@@ -118,7 +118,7 @@ export default function OnboardingPage() {
                     {/* Step 1: Language */}
                     {step === 1 && (
                         <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-                            <h2 className="text-2xl font-bold text-gray-900 text-center">Language / భాష</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center">Language / భాష</h2>
                             <div className="grid grid-cols-2 gap-4">
                                 <button
                                     onClick={() => setFormData({ ...formData, language: 'en' })}
@@ -146,32 +146,32 @@ export default function OnboardingPage() {
                     {/* Step 2: Personal Details */}
                     {step === 2 && (
                         <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-                            <h2 className="text-2xl font-bold text-gray-900 text-center">Your Details</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center">Your Details</h2>
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
+                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
                                     <div className="relative">
                                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                                         <input
                                             type="tel"
                                             value={formData.phone}
                                             onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none text-gray-900 bg-white"
+                                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-green-500 outline-none text-gray-900 dark:text-white bg-white dark:bg-slate-800"
                                             placeholder="+91 9876543210"
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">District / Location</label>
+                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">District / Location</label>
                                     <div className="relative">
                                         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                                         <input
                                             type="text"
                                             value={formData.location_district}
                                             onChange={e => setFormData({ ...formData, location_district: e.target.value })}
-                                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none text-gray-900 bg-white"
+                                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-green-500 outline-none text-gray-900 dark:text-white bg-white dark:bg-slate-800"
                                             placeholder="e.g. Hyderabad"
                                         />
                                     </div>
@@ -194,7 +194,7 @@ export default function OnboardingPage() {
                     {/* Step 3: Role Selection */}
                     {step === 3 && (
                         <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-                            <h2 className="text-2xl font-bold text-gray-900 text-center">Select Role</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center">Select Role</h2>
 
                             <div className="space-y-3">
                                 <RoleOption

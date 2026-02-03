@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/components/providers/LanguageProvider";
-import { ArrowLeft, Search, ChevronRight, Mail, Phone, ExternalLink } from "lucide-react";
+import { ArrowLeft, Search, ChevronRight, Mail, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 export default function SupportPage() {
@@ -37,18 +37,15 @@ export default function SupportPage() {
                 </div>
 
                 {/* Quick Actions */}
-                <div className="grid grid-cols-2 gap-3">
-                    <a href="mailto:support@keypaper.in" className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center gap-2 text-center active:scale-95 transition-transform">
+                <div className="w-full">
+                    <a href="mailto:support@keypaper.in" className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-center gap-3 active:scale-95 transition-transform w-full">
                         <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
                             <Mail size={20} />
                         </div>
-                        <span className="text-sm font-bold text-gray-700">Email Us</span>
-                    </a>
-                    <a href="tel:+911234567890" className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center gap-2 text-center active:scale-95 transition-transform">
-                        <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600">
-                            <Phone size={20} />
+                        <div className="text-left">
+                            <span className="text-sm font-bold text-gray-900 block">Email Support</span>
+                            <span className="text-xs text-gray-500">support@keypaper.in</span>
                         </div>
-                        <span className="text-sm font-bold text-gray-700">Call Us</span>
                     </a>
                 </div>
 
