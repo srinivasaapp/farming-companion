@@ -2,6 +2,7 @@
 
 import { HomeHeader } from "@/components/home/HomeHeader";
 import { DashboardWidgets } from "@/components/home/DashboardWidgets";
+import { WeatherWidget } from "@/components/home/WeatherWidget";
 
 export default function HomePage() {
   const { user, lang, setLanguage, setShowLoginModal } = useAuth();
@@ -49,19 +50,7 @@ export default function HomePage() {
         </div>
 
         {/* Sub-Header: Weather & Location */}
-        <div className="px-4 pb-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 bg-orange-50 px-2.5 py-1 rounded-full border border-orange-100">
-              <span className="text-orange-500 font-bold text-xs">28°C</span>
-              <span className="text-[10px] font-medium text-orange-700 uppercase">Sunny</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1.5 text-gray-500">
-            <MapPin size={14} className="text-green-600" />
-            <span className="text-xs font-bold uppercase tracking-wide">Nizamabad, TS</span>
-          </div>
-        </div>
+        <WeatherWidget />
       </div>
 
       {/* Quick Updates Ticker */}
