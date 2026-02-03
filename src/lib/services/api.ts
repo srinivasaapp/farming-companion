@@ -78,7 +78,8 @@ export async function createQuestion(title: string, description: string, crop: s
             title,
             description,
             crop,
-            profile_id: authorId, // Trying profile_id
+            profile_id: authorId,
+            author_id: authorId, // Fix: satisfy legacy DB constraint
             image_url: imageUrl,
             is_solved: false
         })
@@ -101,7 +102,8 @@ export async function createNews(news: {
         .from('news')
         .insert({
             ...rest,
-            profile_id: author_id // Trying profile_id
+            profile_id: author_id,
+            author_id: author_id // Fix: satisfy legacy DB constraint
         })
         .select()
         .single();
@@ -123,7 +125,8 @@ export async function createStory(story: {
         .from('stories')
         .insert({
             ...rest,
-            profile_id: author_id // Trying profile_id
+            profile_id: author_id,
+            author_id: author_id // Fix: satisfy legacy DB constraint
         })
         .select()
         .single();
@@ -147,7 +150,8 @@ export async function createListing(listing: {
         .from('listings')
         .insert({
             ...rest,
-            profile_id: author_id, // Trying profile_id
+            profile_id: author_id,
+            author_id: author_id, // Fix: satisfy legacy DB constraint
             status: 'active'
         })
         .select()
