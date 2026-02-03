@@ -172,7 +172,7 @@ export function GravityStory({ src, title, expert, soilPh, pestInfo, isActive }:
                             <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
                         </div>
                         <div className="flex-1 overflow-y-auto px-4 pb-20">
-                            <CommentSection postId="story-demo" startOpen={true} />
+                            <CommentSection postId="story-demo" postType="story" />
                         </div>
                         <button
                             onClick={() => setShowComments(false)}

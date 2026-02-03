@@ -293,3 +293,107 @@ export async function updateUserVerification(userId: string, isVerified: boolean
     if (error) throw error;
     return data;
 }
+
+// === Activity & Profile ===
+
+export async function getUserActivity(userId: string) {
+    const [qRes, lRes, nRes, sRes] = await Promise.all([
+        supabase.from('questions').select('id, title, created_at').eq('profile_id', userId),
+        supabase.from('listings').select('id, title, created_at').eq('profile_id', userId),
+        supabase.from('news').select('id, title, created_at').eq('profile_id', userId),
+        supabase.from('stories').select('id, title, created_at').eq('profile_id', userId)
+    ]);
+
+    const activity = [
+        ...(qRes.data || []).map(i => ({ ...i, type: 'question' })),
+        ...(lRes.data || []).map(i => ({ ...i, type: 'listing' })),
+        ...(nRes.data || []).map(i => ({ ...i, type: 'news' })),
+        ...(sRes.data || []).map(i => ({ ...i, type: 'story' }))
+    ];
+
+    // Sort by Date Descending
+    return activity.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+}
+
+// === Comments ===
+
+export async function getComments(postId: string) {
+    const { data, error } = await supabase
+        .from('comments')
+        .select(`
+            *,
+            profiles!comments_author_id_fkey (
+                full_name,
+                username
+            )
+        `)
+        .eq('post_id', postId)
+        .order('created_at', { ascending: true }); // Oldest first for comments usually
+
+    if (error) {
+        console.error("Error fetching comments:", error);
+        return [];
+    }
+
+    // Transform flat list to nested structure if needed, or return flat and let UI handle it.
+    // For now, return flat.
+    return data || [];
+}
+
+export async function createComment(comment: {
+    post_id: string;
+    author_id: string;
+    content: string;
+    parent_id?: string;
+    post_type?: string;
+}) {
+    const { data, error } = await supabase
+        .from('comments')
+        .insert(comment)
+        .select(`
+             *,
+            profiles!comments_author_id_fkey (
+                full_name,
+                username
+            )
+        `)
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+
+// === Notifications ===
+
+export async function getNotifications(userId: string) {
+    const { data, error } = await supabase
+        .from('notifications')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+}
+
+export async function markNotificationRead(id: string) {
+    const { error } = await supabase
+        .from('notifications')
+        .update({ is_read: true })
+        .eq('id', id);
+
+    if (error) throw error;
+}
+
+export async function createNotification(notification: {
+    user_id: string;
+    type: 'reply' | 'like' | 'system';
+    content: string;
+    related_id?: string;
+}) {
+    const { error } = await supabase
+        .from('notifications')
+        .insert(notification);
+
+    if (error) throw error;
+}

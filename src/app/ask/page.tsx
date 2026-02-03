@@ -287,7 +287,7 @@ export default function AskPage() {
                             {activeQuestionId === q.id && (
                                 <div className="px-4 pb-4 animate-in slide-in-from-top duration-200">
                                     <div className="border-t border-gray-100 pt-2">
-                                        <CommentSection postId={q.id} />
+                                        <CommentSection postId={q.id} authorId={q.author_id} postType="question" />
                                     </div>
                                 </div>
                             )}

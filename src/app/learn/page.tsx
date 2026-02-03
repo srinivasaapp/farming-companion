@@ -223,7 +223,7 @@ export default function LearnPage() {
                                 {/* Comments Section */}
                                 {activeArticleId === item.id && (
                                     <div className="pt-2 animate-in slide-in-from-top duration-200">
-                                        <CommentSection postId={item.id} />
+                                        <CommentSection postId={item.id} authorId={item.author_id} postType="news" />
                                     </div>
                                 )}
                             </div>

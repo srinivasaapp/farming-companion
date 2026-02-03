@@ -1,36 +1,77 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { useAuth } from "@/components/providers/AuthProvider";
+import { getNotifications, markNotificationRead } from "@/lib/services/api";
+import { timeAgo } from "@/lib/utils/date";
 import { ArrowLeft, Bell, MessageCircle, ThumbsUp, Star } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+interface Notification {
+    id: string;
+    type: 'reply' | 'like' | 'system';
+    content: string;
+    created_at: string;
+    is_read: boolean;
+    related_id?: string;
+}
 
 export default function NotificationsPage() {
     const { t } = useLanguage();
+    const { user } = useAuth();
+    const router = useRouter();
 
-    // Mock Data
-    const notifications = [
-        {
-            id: '1',
-            type: 'reply',
-            text: 'Dr. Singh replied to your question: "Use Neem oil..."',
-            date: '10 min ago',
-            read: false
-        },
-        {
-            id: '2',
-            type: 'like',
-            text: 'Raju and 5 others found your tip helpful.',
-            date: '1 hour ago',
-            read: true
-        },
-        {
-            id: '3',
-            type: 'system',
-            text: 'Welcome to Keypaper! Complete your profile.',
-            date: '2 days ago',
-            read: true
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (user) {
+            loadNotifications();
+        } else {
+            setLoading(false);
         }
-    ];
+    }, [user]);
+
+    const loadNotifications = async () => {
+        try {
+            if (!user) return;
+            const data = await getNotifications(user.id);
+            setNotifications(data);
+        } catch (err) {
+            console.error("Failed to load notifications", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleClick = async (notification: Notification) => {
+        if (!notification.is_read) {
+            try {
+                await markNotificationRead(notification.id);
+                setNotifications(prev => prev.map(n => n.id === notification.id ? { ...n, is_read: true } : n));
+            } catch (err) {
+                console.error("Failed to mark read", err);
+            }
+        }
+
+        // Navigate to content if applicable
+        if (notification.related_id) {
+            // Determine path based on context or just try to find it. 
+            // Since we don't strictly know the type (question vs listing) from just ID in this simple table,
+            // we might default to one or try to guess. 
+            // Ideally 'related_id' would be enough if we had a unified route or 'type' in notification.
+            // For now, let's assume it's a question or handle generic redirect.
+
+            // If the notification type came from a comment reply, it's likely on a post.
+            // We'll simplisticly route to /questions/[id] or handle logic if we saved 'type' in DB more granularly.
+            // But wait, our API `createNotification` just takes `related_id`.
+            // Let's assume most are questions for now or generic view.
+            // A better way is to store 'link' in notification or 'resource_type'.
+            // I'll leave it as a TODO to route correctly, for now just mark read.
+        }
+    };
 
     const getIcon = (type: string) => {
         switch (type) {
@@ -62,16 +103,25 @@ export default function NotificationsPage() {
 
             {/* List */}
             <div className="p-4 flex flex-col gap-3">
-                {notifications.length > 0 ? (
+                {loading ? (
+                    <div className="text-center py-10 text-gray-400">Loading...</div>
+                ) : notifications.length > 0 ? (
                     notifications.map((item) => (
-                        <div key={item.id} className={`p-4 rounded-xl border flex gap-3 ${item.read ? 'bg-white border-gray-100' : 'bg-blue-50/50 border-blue-100'}`}>
+                        <div
+                            key={item.id}
+                            onClick={() => handleClick(item)}
+                            className={`p-4 rounded-xl border flex gap-3 cursor-pointer transition-colors ${!item.is_read ? 'bg-white border-green-100 shadow-sm' : 'bg-gray-50 border-gray-100'}`}
+                        >
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${getColor(item.type)}`}>
                                 {getIcon(item.type)}
                             </div>
                             <div>
-                                <p className={`text-sm ${item.read ? 'text-gray-700' : 'text-gray-900 font-semibold'} leading-snug`}>{item.text}</p>
-                                <span className="text-[10px] font-medium text-gray-400 mt-2 block">{item.date}</span>
+                                <p className={`text-sm ${!item.is_read ? 'text-gray-900 font-bold' : 'text-gray-600'} leading-snug`}>{item.content}</p>
+                                <span className="text-[10px] font-medium text-gray-400 mt-2 block">{timeAgo(item.created_at)}</span>
                             </div>
+                            {!item.is_read && (
+                                <div className="w-2 h-2 bg-green-500 rounded-full ml-auto shrink-0 mt-1.5"></div>
+                            )}
                         </div>
                     ))
                 ) : (
