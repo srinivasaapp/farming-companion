@@ -3,10 +3,13 @@
 import { HomeHeader } from "@/components/home/HomeHeader";
 import { DashboardWidgets } from "@/components/home/DashboardWidgets";
 import { WeatherWidget } from "@/components/home/WeatherWidget";
+import { GlobalSearch } from "@/components/search/GlobalSearch";
+import { useState } from "react";
 
 export default function HomePage() {
   const { user, lang, setLanguage, setShowLoginModal } = useAuth();
   const { t } = useLanguage();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 pb-24">
@@ -23,7 +26,10 @@ export default function HomePage() {
 
           {/* Right: Actions */}
           <div className="flex items-center gap-2">
-            <button className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-gray-100">
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-gray-100"
+            >
               <Search size={18} />
             </button>
 
@@ -66,10 +72,12 @@ export default function HomePage() {
       {/* Main Content Area */}
       <div className="p-4 space-y-6">
         <DashboardWidgets />
-
         <div className="text-center text-xs text-gray-400 py-4 mt-auto">
           copyright 2026 @ keypaper.in
-        </div>      </div>
+        </div>
+      </div>
+
+      <GlobalSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </div>
   );
 }
