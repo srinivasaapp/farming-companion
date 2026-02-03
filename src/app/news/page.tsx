@@ -37,58 +37,74 @@ export default function NewsListPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col pb-20">
-            {/* Header */}
-            <div className="bg-white sticky top-0 z-30 border-b border-gray-100 shadow-sm px-4 py-3 flex items-center gap-3">
-                <button onClick={() => router.back()} className="text-gray-600">
-                    <ArrowLeft size={24} />
-                </button>
-                <h1 className="text-lg font-bold text-gray-900">{t('nav_news') || "News & Updates"}</h1>
+        <div className="flex flex-col h-screen bg-black overflow-hidden relative">
+            {/* Header - Fixed at top */}
+            <div className="absolute top-0 left-0 right-0 z-50">
+                <FeedHeader
+                    title={t('nav_news') || "News & Updates"}
+                    uploadPath="/news/upload" // Assuming upload path exists or will exist
+                    selectedRoles={[]}
+                    onRoleChange={() => { }}
+                />
             </div>
 
-            <div className="p-4 space-y-4">
+            <div className="flex-1 overflow-y-scroll snap-y snap-mandatory scroll-smooth pb-[0px]">
                 {newsList.length === 0 ? (
-                    <div className="text-center text-gray-500 py-10">
-                        {t('market_no_results') || "No news available."}
+                    <div className="flex items-center justify-center h-full text-gray-500">
+                        <p>{t('market_no_results') || "No news available."}</p>
                     </div>
                 ) : (
                     newsList.map((item) => (
-                        <Link
-                            href={`/news/view?id=${item.id}`}
+                        <div
                             key={item.id}
-                            className="block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                            className="w-full h-full snap-start relative flex flex-col justify-end group border-b border-white/5"
                         >
-                            <div className="aspect-video w-full bg-gray-100 relative">
+                            {/* Background Image - Full Screen */}
+                            <div className="absolute inset-0 z-0">
                                 <img
-                                    src={item.image_url || item.image || "https://via.placeholder.com/400x200"}
+                                    src={item.image_url || item.image || "https://via.placeholder.com/400x800"}
                                     alt={item.title}
                                     className="w-full h-full object-cover"
                                     loading="lazy"
                                 />
+                                {/* Gradient Overlay for text readability */}
+                                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent via-60% to-black/90" />
+                            </div>
+
+                            {/* Content Overlay */}
+                            <div className="relative z-10 p-6 pb-24 flex flex-col gap-3">
+                                {/* Tag / Badge */}
                                 {item.tag && (
-                                    <span className="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+                                    <span className="self-start bg-green-600/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
                                         {item.tag}
                                     </span>
                                 )}
-                            </div>
-                            <div className="p-4">
-                                <div className="flex items-center gap-2 text-gray-400 mb-2">
-                                    <Calendar size={12} />
-                                    <span className="text-xs font-medium">
-                                        {new Date(item.created_at).toLocaleDateString()}
-                                    </span>
-                                </div>
-                                <h3 className="font-bold text-gray-900 leading-tight mb-2 line-clamp-2">
+
+                                {/* Title */}
+                                <h2 className="text-2xl font-bold text-white leading-tight drop-shadow-md">
                                     {item.title}
-                                </h3>
-                                <p className="text-sm text-gray-500 line-clamp-2">
+                                </h2>
+
+                                {/* Meta Info */}
+                                <div className="flex items-center gap-2 text-gray-300 text-sm font-medium">
+                                    <Calendar size={14} />
+                                    <span>{new Date(item.created_at).toLocaleDateString()}</span>
+                                </div>
+
+                                {/* Summary */}
+                                <p className="text-gray-200 text-sm line-clamp-3 leading-relaxed drop-shadow-sm">
                                     {item.summary || (Array.isArray(item.content) ? item.content[0] : item.content)}
                                 </p>
-                                <div className="mt-3 flex items-center text-green-600 text-sm font-semibold">
-                                    Read More <ChevronRight size={16} />
-                                </div>
+
+                                {/* Action Button */}
+                                <Link
+                                    href={`/news/view?id=${item.id}`}
+                                    className="mt-2 self-start flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white px-5 py-2.5 rounded-xl font-semibold transition-all"
+                                >
+                                    Read Full Story <ChevronRight size={16} />
+                                </Link>
                             </div>
-                        </Link>
+                        </div>
                     ))
                 )}
             </div>
