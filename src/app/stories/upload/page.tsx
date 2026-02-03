@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Upload, Loader2, Video } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { MediaUploader } from "@/components/common/MediaUploader";
+import { useToast } from "@/components/providers/ToastProvider";
 
 export default function UploadStoryPage() {
     const router = useRouter();
     const { user } = useAuth();
+    const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
 
     const [file, setFile] = useState<File | null>(null);
@@ -34,10 +36,15 @@ export default function UploadStoryPage() {
                 author_id: user.id
             });
 
-            router.push("/stories");
+            showToast("Story shared successfully!", "success");
+            setTimeout(() => {
+                router.push("/stories");
+                router.refresh();
+            }, 1500);
+
         } catch (err: any) {
             console.error("Story upload failed", err);
-            alert("Failed to post story: " + err.message);
+            showToast(err.message || "Failed to post story", "error");
         } finally {
             setLoading(false);
         }

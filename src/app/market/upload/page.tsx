@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Tag, Loader2, MapPin } from "lucide-react";
 import { MediaUploader } from "@/components/common/MediaUploader";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { useToast } from "@/components/providers/ToastProvider";
 
 export default function UploadMarketPage() {
     const router = useRouter();
     const { user } = useAuth();
+    const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
 
     // State
@@ -44,10 +46,14 @@ export default function UploadMarketPage() {
                 image_url: imageUrl
             });
 
-            router.push("/market");
+            showToast("Item Listed Successfully!", "success");
+            setTimeout(() => {
+                router.push("/market");
+                router.refresh();
+            }, 1500);
         } catch (err: any) {
             console.error("Market post failed", err);
-            alert("Failed to list item: " + err.message);
+            showToast(err.message || "Failed to list item", "error");
         } finally {
             setLoading(false);
         }

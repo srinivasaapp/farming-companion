@@ -4,11 +4,13 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Upload, Loader2, Image as ImageIcon } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { useToast } from "@/components/providers/ToastProvider";
 import { MediaUploader } from "@/components/common/MediaUploader";
 
 export default function UploadNewsPage() {
     const router = useRouter();
     const { user } = useAuth();
+    const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
 
     // Basic form state
@@ -50,10 +52,14 @@ export default function UploadNewsPage() {
             }
 
             // Success
-            router.push("/learn");
+            showToast("News published successfully!", "success");
+            setTimeout(() => {
+                router.push("/learn");
+                router.refresh();
+            }, 1500);
         } catch (err: any) {
             console.error("Upload failed", err);
-            alert("Failed to upload news: " + err.message);
+            showToast(err.message || "Failed to upload news", "error");
         } finally {
             setLoading(false);
         }

@@ -5,11 +5,13 @@ import { FeedHeader, UserRole } from "@/components/common/FeedHeader";
 import { GravityStory } from "@/components/ui/GravityStory";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { useToast } from "@/components/providers/ToastProvider";
 import { Trash2 } from "lucide-react";
 
 export default function StoriesPage() {
     const { t } = useLanguage();
     const { user } = useAuth();
+    const { showToast } = useToast();
     const [selectedRoles, setSelectedRoles] = useState<UserRole[]>([]);
     const [stories, setStories] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -77,9 +79,10 @@ export default function StoriesPage() {
             await deleteStory(storyToDelete);
             setStories(prev => prev.filter(s => s.id !== storyToDelete));
             setStoryToDelete(null);
+            showToast("Story deleted", "success");
         } catch (err) {
             console.error("Failed to delete", err);
-            alert("Failed to delete. Please try again.");
+            showToast("Failed to delete", "error");
         }
     };
 

@@ -7,6 +7,7 @@ import { Plus, Search, HelpCircle, AlertCircle, RefreshCcw, Camera, Image as Ima
 import { CommentSection } from "@/components/feed/CommentSection";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useLanguage } from "@/components/providers/LanguageProvider";
+import { useToast } from "@/components/providers/ToastProvider";
 import { getQuestions, createQuestion, uploadImage, deleteQuestion } from "@/lib/services/api";
 import { shareContent } from "@/lib/utils/share";
 
@@ -39,6 +40,7 @@ interface Question {
 
 export default function AskPage() {
     const { t } = useLanguage();
+    const { showToast } = useToast();
     const { user, setShowLoginModal } = useAuth();
     const [searchQuery, setSearchQuery] = useState("");
     const [questions, setQuestions] = useState<Question[]>([]);
@@ -98,9 +100,10 @@ export default function AskPage() {
             await deleteQuestion(id);
             // Optimistic update
             setQuestions(prev => prev.filter(q => q.id !== id));
+            showToast("Question deleted", "success");
         } catch (err) {
             console.error("Failed to delete", err);
-            alert("Failed to delete");
+            showToast("Failed to delete", "error");
         }
     };
 
@@ -137,6 +140,7 @@ export default function AskPage() {
             setIsSubmitting(false);
         }
     };
+
 
     const [selectedRoles, setSelectedRoles] = useState<UserRole[]>([]);
 
@@ -216,10 +220,10 @@ export default function AskPage() {
                                     </div>
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    {/* DEBUG: Log IDs to console */}
-                                    {console.log(`Question ${q.id}: user=${user?.id}, author=${q.author_id}, match=${user?.id === q.author_id}`)}
 
-                                    {user && user.id === q.author_id && (
+
+                                    {/* Fix: Check both author_id and profile_id */}
+                                    {user && (user.id === q.author_id || user.id === (q as any).profile_id) && (
                                         <button
                                             onClick={(e) => handleDelete(e, q.id)}
                                             style={{ color: '#EF4444', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}

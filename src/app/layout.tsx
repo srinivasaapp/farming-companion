@@ -48,6 +48,7 @@ export const viewport = {
 
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { AuthProvider } from "@/components/providers/AuthProvider";
+import { ToastProvider } from "@/components/providers/ToastProvider";
 import { ErrorBoundary } from "@/components/layout/ErrorBoundary";
 
 export default function RootLayout({
@@ -66,7 +67,9 @@ export default function RootLayout({
         <ErrorBoundary>
           <AuthProvider>
             <LanguageProvider>
-              <Shell>{children}</Shell>
+              <ToastProvider>
+                <Shell>{children}</Shell>
+              </ToastProvider>
             </LanguageProvider>
           </AuthProvider>
         </ErrorBoundary>
