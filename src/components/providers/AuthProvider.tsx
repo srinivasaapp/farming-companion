@@ -208,11 +208,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     }, [fetchProfile, repairProfile]);
 
+    const userRef = useRef(user);
+    useEffect(() => {
+        userRef.current = user;
+    }, [user]);
+
     useEffect(() => {
         let isMounted = true;
 
         // FAILSAFE: Force unlock after 12s no matter what happens in the async flow.
-        // This guarantees the Splash screen will disappear even if the network hangs or logic errors.
         const failsafeTimer = setTimeout(() => {
             if (isMounted) {
                 console.warn("AuthProvider: Failsafe triggered. Forcing app unlock.");
@@ -252,7 +256,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 // Ignore AbortError which happens on component unmount/remount in StrictMode
                 if (err.name === 'AbortError' || err.message?.includes('aborted')) {
                     console.log("AuthProvider: Init aborted (benign).");
-                    // Do NOT return here, let it fall through to finally to ensure loading state is cleared if needed
                 } else {
                     console.error("AuthProvider: Initialization Failed:", err);
                     if (isMounted) setError(err.message || "Failed to initialize secure session.");
@@ -272,18 +275,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 console.log("AuthProvider: AuthStateChange Event:", _event);
 
                 if (_event === 'SIGNED_IN' || _event === 'USER_UPDATED') {
-                    // Only show loading for explicit sign-ins, not updates if we already have user
-                    if (_event === 'SIGNED_IN') setIsLoading(true);
+                    // Only show loading for explicit NEW sign-ins.
+                    // If we already have a user (userRef.current), this is likely a tab switch/focus refresh.
+                    const isSilentRefresh = !!userRef.current;
+
+                    if (_event === 'SIGNED_IN' && !isSilentRefresh) {
+                        setIsLoading(true);
+                    }
 
                     if (newSession?.user) {
                         setSession(newSession);
                         setUser(newSession.user);
                         try {
-                            await handleIdentityLifecycle(newSession.user);
+                            if (!isSilentRefresh) {
+                                await handleIdentityLifecycle(newSession.user);
+                            }
                         } catch (err) {
                             console.error("Auth Lifecycle Error:", err);
                         } finally {
-                            setIsLoading(false);
+                            if (_event === 'SIGNED_IN' && !isSilentRefresh) {
+                                setIsLoading(false);
+                            }
                         }
                     }
                 } else if (_event === 'TOKEN_REFRESHED') {

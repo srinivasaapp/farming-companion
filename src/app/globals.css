@@ -9,11 +9,13 @@
   --primary-light: #f0fdf4;
   --secondary-green: #4ade80;
 
-  /* Neutrals */
+  /* Neutrals - Slate based for modern feel */
   --background: #ffffff;
-  --foreground: #111827;
+  --foreground: #0f172a;
+  /* Slate 900 */
   --card-bg: #ffffff;
-  --border: #e5e7eb;
+  --border: #e2e8f0;
+  /* Slate 200 */
 
   /* Status */
   --error: #ef4444;
@@ -36,10 +38,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0f172a;
+    --background: #020617;
+    /* Slate 950 */
     --foreground: #f8fafc;
-    --card-bg: #1e293b;
-    --border: #334155;
+    /* Slate 50 */
+    --card-bg: #0f172a;
+    /* Slate 900 */
+    --border: #1e293b;
+    /* Slate 800 */
     --primary-green: #22c55e;
     --primary-light: #14532d;
   }

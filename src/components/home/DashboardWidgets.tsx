@@ -50,7 +50,7 @@ export function DashboardWidgets() {
 
             <div className="grid grid-cols-2 gap-3">
                 {/* Learn Highlight */}
-                <Link href="/learn" className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-3 hover:border-green-200 transition-colors">
+                <Link href="/learn" className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-3 hover:border-green-200 transition-all active:scale-95 hover:shadow-lg hover:-translate-y-1 duration-300">
                     <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600">
                         <Lightbulb size={20} />
                     </div>
@@ -61,7 +61,7 @@ export function DashboardWidgets() {
                 </Link>
 
                 {/* Market Highlight */}
-                <Link href="/market" className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-3 hover:border-green-200 transition-colors">
+                <Link href="/market" className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-3 hover:border-green-200 transition-all active:scale-95 hover:shadow-lg hover:-translate-y-1 duration-300">
                     <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600">
                         <TrendingUp size={20} />
                     </div>

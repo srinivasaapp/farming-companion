@@ -25,9 +25,16 @@ export default function UploadStoryPage() {
             if (!file) throw new Error("Please select a video or photo");
 
             const { uploadImage, createStory } = await import("@/lib/services/api");
+            const { compressImage } = await import("@/lib/utils/image");
 
             // Upload to 'stories' bucket
-            const mediaUrl = await uploadImage(file, 'stories');
+            let mediaUrl;
+            if (file.type.startsWith('image/')) {
+                const compressedFile = await compressImage(file);
+                mediaUrl = await uploadImage(compressedFile, 'stories');
+            } else {
+                mediaUrl = await uploadImage(file, 'stories');
+            }
 
             await createStory({
                 title: caption,

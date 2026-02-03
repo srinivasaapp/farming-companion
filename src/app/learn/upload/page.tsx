@@ -32,7 +32,10 @@ export default function UploadNewsPage() {
                 // Reuse uploadImage from api.ts (needs to be imported or moved to common hook)
                 // For now, importing from api works if we export it.
                 const { uploadImage, createNews } = await import("@/lib/services/api");
-                imageUrl = await uploadImage(file, 'news');
+                const { compressImage } = await import("@/lib/utils/image");
+
+                const compressedFile = await compressImage(file);
+                imageUrl = await uploadImage(compressedFile, 'news');
 
                 await createNews({
                     title,

@@ -29,10 +29,12 @@ export default function UploadMarketPage() {
             if (!user) throw new Error("Login required");
 
             const { uploadImage, createListing } = await import("@/lib/services/api");
+            const { compressImage } = await import("@/lib/utils/image");
 
             let imageUrl = undefined;
             if (file) {
-                imageUrl = await uploadImage(file, 'listings');
+                const compressedFile = await compressImage(file);
+                imageUrl = await uploadImage(compressedFile, 'listings');
             }
 
             await createListing({

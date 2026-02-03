@@ -14,7 +14,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 pb-24">
       {/* Top Section: Header & Status */}
-      <div className="bg-white sticky top-0 z-30 border-b border-gray-100 shadow-sm">
+      <div className="bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-gray-100/50 supports-[backdrop-filter]:bg-white/60">
         <div className="px-4 py-3 flex items-center justify-between">
           {/* Left: Brand & Time */}
           <div className="flex flex-col">
@@ -28,26 +28,26 @@ export default function HomePage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-gray-100"
+              className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-gray-100 active:scale-95 transition-all"
             >
               <Search size={18} />
             </button>
 
             <button
-              className="h-9 px-3 rounded-full bg-gray-50 flex items-center justify-center text-gray-700 font-bold text-xs hover:bg-gray-100 transition-colors border border-gray-100"
+              className="h-9 px-3 rounded-full bg-gray-50 flex items-center justify-center text-gray-700 font-bold text-xs hover:bg-gray-100 active:scale-95 transition-all border border-gray-100"
               onClick={() => setLanguage(lang === 'en' ? 'te' : 'en')}
             >
               {lang === 'en' ? 'తె' : 'En'}
             </button>
 
             {user ? (
-              <Link href="/profile" className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold hover:bg-green-200 border border-green-200">
+              <Link href="/profile" className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold hover:bg-green-200 active:scale-95 transition-all border border-green-200">
                 <UserIcon size={18} />
               </Link>
             ) : (
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="h-9 px-4 rounded-full bg-green-600 text-white font-bold text-xs shadow-md hover:bg-green-700 transition-colors"
+                className="h-9 px-4 rounded-full bg-green-600 text-white font-bold text-xs shadow-md hover:bg-green-700 active:scale-95 transition-all"
               >
                 {t('profile_login')}
               </button>
@@ -60,7 +60,7 @@ export default function HomePage() {
       </div>
 
       {/* Quick Updates Ticker */}
-      <div className="bg-green-50 px-4 py-3 border-b border-green-100 flex items-center gap-3 overflow-hidden">
+      <div className="bg-gradient-to-r from-green-50 via-emerald-50 to-green-50 px-4 py-3 border-b border-green-100 flex items-center gap-3 overflow-hidden">
         <div className="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase shrink-0">
           Mandi Update
         </div>
