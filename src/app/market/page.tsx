@@ -41,6 +41,8 @@ export default function MarketPage() {
     const [pageError, setPageError] = useState<string | null>(null);
     const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
     const [showNearMe, setShowNearMe] = useState(false);
+    const { showToast } = useToast();
+    const [listingToDelete, setListingToDelete] = useState<string | null>(null);
 
     // Filter Modal
     const [showFilterModal, setShowFilterModal] = useState(false);
@@ -112,8 +114,7 @@ export default function MarketPage() {
         }
     };
 
-    const { showToast } = useToast();
-    const [listingToDelete, setListingToDelete] = useState<string | null>(null);
+
 
     const handleDelete = (e: React.MouseEvent, id: string) => {
         e.stopPropagation();
