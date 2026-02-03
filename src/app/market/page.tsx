@@ -31,10 +31,27 @@ interface Listing {
     };
 }
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 export default function MarketPage() {
     const { t } = useLanguage();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    // Derive activeTab from URL, default to 'buy'
+    const tabParam = searchParams.get('tab');
+    const activeTab = (["buy", "sell", "rent"].includes(tabParam as any)
+        ? tabParam
+        : "buy") as "buy" | "sell" | "rent";
+
+    const setActiveTab = (tab: "buy" | "sell" | "rent") => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('tab', tab);
+        router.replace(`/market?${params.toString()}`, { scroll: false });
+    };
+
     const [selectedRoles, setSelectedRoles] = useState<UserRole[]>([]);
-    const [activeTab, setActiveTab] = useState<"buy" | "sell" | "rent">("buy");
+    // activeTab state removed in favor of URL derivation
     const { user, setShowLoginModal } = useAuth();
     const [listings, setListings] = useState<Listing[]>([]);
     const [loading, setLoading] = useState(true);
@@ -113,7 +130,6 @@ export default function MarketPage() {
             setPreviewUrl(URL.createObjectURL(file));
         }
     };
-
 
 
     const handleDelete = (e: React.MouseEvent, id: string) => {

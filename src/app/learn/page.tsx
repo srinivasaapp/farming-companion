@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import { FeedHeader, UserRole } from "@/components/common/FeedHeader";
 import { AntiGravityCard } from "@/components/ui/AntiGravityCard";
-import { Loader2, ThumbsUp, MessageCircle, Share2, Lock, Trash2 } from "lucide-react";
+import { Loader2, ThumbsUp, MessageCircle, Share2, Lock, Trash2, PenSquare } from "lucide-react";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { CommentSection } from "@/components/feed/CommentSection";
 import { shareContent } from "@/lib/utils/share";
 import { getOptimizedImageUrl } from "@/lib/utils/image";
+import { useToast } from "@/components/providers/ToastProvider";
+import { useRouter } from "next/navigation";
 
 // Define Interface for News/Article
 interface NewsItem {
@@ -19,6 +21,7 @@ interface NewsItem {
     image_url?: string;
     created_at: string;
     author_id: string;
+    profile_id?: string; // Add profile_id check
     profiles?: {
         full_name: string;
         username: string;
@@ -74,7 +77,10 @@ const safeRender = (content: any): React.ReactNode => {
 
 export default function LearnPage() {
     const { t } = useLanguage();
-    const { user, setShowLoginModal } = useAuth();
+    const router = useRouter();
+    const { user, profile, setShowLoginModal } = useAuth();
+    const { showToast } = useToast();
+
     const [selectedRoles, setSelectedRoles] = useState<UserRole[]>([]);
     const [activeArticleId, setActiveArticleId] = useState<string | null>(null);
     const [helpfuls, setHelpfuls] = useState<Record<string, number>>({ 'e1': 24, 'u1': 12 });
@@ -82,6 +88,7 @@ export default function LearnPage() {
 
     const [articles, setArticles] = useState<NewsItem[]>([]);
     const [loading, setLoading] = useState(true);
+    const [articleToDelete, setArticleToDelete] = useState<string | null>(null);
 
     useEffect(() => {
         const loadNews = async () => {
@@ -137,6 +144,31 @@ export default function LearnPage() {
         }
     };
 
+    const handleDeleteClick = (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        setArticleToDelete(id);
+    };
+
+    const confirmDelete = async () => {
+        if (!articleToDelete) return;
+        try {
+            const { deleteNews } = await import("@/lib/services/api");
+            await deleteNews(articleToDelete);
+
+            setArticles(prev => prev.filter(a => a.id !== articleToDelete));
+            showToast("Article deleted successfully", "success");
+            setArticleToDelete(null);
+        } catch (err) {
+            console.error("Failed to delete article", err);
+            showToast("Failed to delete article", "error");
+        }
+    };
+
+    const handleEdit = (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        router.push(`/learn/upload?edit=${id}`);
+    };
+
     if (loading) {
         return (
             <div className="flex flex-col min-h-screen bg-gray-100 pb-20 items-center justify-center">
@@ -147,7 +179,7 @@ export default function LearnPage() {
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-gray-100 pb-20">
+        <div className="flex flex-col min-h-screen bg-gray-100 pb-20 relative">
             <FeedHeader
                 title={t('nav_learn')}
                 uploadPath="/learn/upload"
@@ -165,8 +197,11 @@ export default function LearnPage() {
                         const role = item.profiles?.role || 'farmer';
                         const isExpert = role === 'expert';
 
+                        // Check Ownership: user wrote it OR user is admin
+                        const isOwner = user && (user.id === item.author_id || user.id === item.profile_id || profile?.role === 'admin');
+
                         return (
-                            <div key={item.id} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col gap-3">
+                            <div key={item.id} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col gap-3 relative group">
                                 {item.image_url && (
                                     <div className="h-48 rounded-xl overflow-hidden bg-gray-100 w-full">
                                         <img
@@ -183,6 +218,26 @@ export default function LearnPage() {
                                             }`}>
                                             {isExpert ? 'Expert Article' : `${role} Post`}
                                         </span>
+
+                                        {/* Edit/Delete Actions */}
+                                        {isOwner && (
+                                            <div className="flex items-center gap-1 bg-gray-50 rounded-lg p-1">
+                                                <button
+                                                    onClick={(e) => handleEdit(e, item.id)}
+                                                    className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                                                    title="Edit"
+                                                >
+                                                    <PenSquare size={16} />
+                                                </button>
+                                                <button
+                                                    onClick={(e) => handleDeleteClick(e, item.id)}
+                                                    className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                                                    title="Delete"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                     <h2 className="text-xl font-bold text-gray-900 leading-tight mb-2">{item.title}</h2>
                                     <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
@@ -231,6 +286,38 @@ export default function LearnPage() {
                     })
                 )}
             </div>
+
+            {/* Delete Confirmation Modal */}
+            {articleToDelete && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden scale-100">
+                        <div className="p-6 text-center">
+                            <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 text-red-500">
+                                <Trash2 size={32} />
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">Delete Article?</h3>
+                            <p className="text-gray-500 text-sm">
+                                Are you sure you want to delete this article? This action cannot be undone.
+                            </p>
+                        </div>
+                        <div className="flex border-t border-gray-100">
+                            <button
+                                onClick={() => setArticleToDelete(null)}
+                                className="flex-1 py-4 text-gray-600 font-bold hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <div className="w-px bg-gray-100"></div>
+                            <button
+                                onClick={confirmDelete}
+                                className="flex-1 py-4 text-red-600 font-bold hover:bg-red-50 active:bg-red-100 transition-colors"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

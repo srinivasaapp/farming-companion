@@ -8,9 +8,19 @@ import { getOptimizedImageUrl } from "@/lib/utils/image";
 import { useEffect, useState } from "react";
 import { getStories } from "@/lib/services/api"; // Import API service
 
+import { useAuth } from "@/components/providers/AuthProvider";
+
 export function DashboardWidgets() {
     const { t } = useLanguage();
+    const { user, profile } = useAuth();
     const [stories, setStories] = useState<any[]>([]);
+
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return t('greeting_morning') || "Good Morning";
+        if (hour < 18) return t('greeting_afternoon') || "Good Afternoon";
+        return t('greeting_evening') || "Good Evening";
+    };
 
     useEffect(() => {
         async function load() {
@@ -27,6 +37,15 @@ export function DashboardWidgets() {
 
     return (
         <div className="space-y-4">
+            {/* Personalization Header */}
+            <div className="mb-2">
+                <h2 className="text-xl font-bold text-gray-800">
+                    {getGreeting()}, <span className="text-green-700">{profile?.full_name?.split(' ')[0] || user?.user_metadata?.full_name?.split(' ')[0] || "Farmer"}</span>
+                </h2>
+                <p className="text-xs text-gray-500 font-medium">
+                    {t('dashboard_welcome_subtitle') || "Ready to grow something great today?"}
+                </p>
+            </div>
             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">{t('highlights_title')}</h3>
 
             <div className="grid grid-cols-2 gap-3">

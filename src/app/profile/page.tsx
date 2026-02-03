@@ -20,6 +20,18 @@ export default function ProfilePage() {
     });
     const [saving, setSaving] = useState(false);
 
+    // If we have a user but no profile and no error, it means profile is still fetching in background
+    if (user && !profile && !error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="flex flex-col items-center gap-2">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                    <p className="text-gray-400 text-sm">Loading profile...</p>
+                </div>
+            </div>
+        );
+    }
+
     if (!profile) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4 text-center">
@@ -63,6 +75,18 @@ export default function ProfilePage() {
 
     if (isLoading) {
         return <div className="min-h-screen flex items-center justify-center bg-gray-50">Loading...</div>;
+    }
+
+    // If we have a user but no profile and no error, it means profile is still fetching
+    if (user && !profile && !error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="flex flex-col items-center gap-2">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                    <p className="text-gray-400 text-sm">Loading profile...</p>
+                </div>
+            </div>
+        );
     }
 
     if (!profile) {

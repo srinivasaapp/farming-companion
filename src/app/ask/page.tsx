@@ -38,11 +38,30 @@ interface Question {
     hasExpertAnswer?: boolean;
 }
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 export default function AskPage() {
     const { t } = useLanguage();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    // Initialize search from URL
+    const initialQuery = searchParams.get('q') || "";
+    const [searchQuery, setSearchQuery] = useState(initialQuery);
+
+    const updateSearch = (query: string) => {
+        setSearchQuery(query);
+        const params = new URLSearchParams(searchParams.toString());
+        if (query) {
+            params.set('q', query);
+        } else {
+            params.delete('q');
+        }
+        router.replace(`/ask?${params.toString()}`, { scroll: false });
+    };
+
     const { showToast } = useToast();
     const { user, setShowLoginModal } = useAuth();
-    const [searchQuery, setSearchQuery] = useState("");
     const [questions, setQuestions] = useState<Question[]>([]);
     const [loading, setLoading] = useState(true);
     const [pageError, setPageError] = useState<string | null>(null);
@@ -181,7 +200,7 @@ export default function AskPage() {
                         placeholder={t('ask_search_placeholder')}
                         className="w-full bg-white border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all shadow-sm"
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => updateSearch(e.target.value)}
                     />
                 </div>
             </div>
