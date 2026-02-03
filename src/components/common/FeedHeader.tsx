@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Plus, Filter, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "@/components/providers/AuthProvider";
 
 export type UserRole = 'expert' | 'farmer' | 'fpo' | 'company' | 'dealer' | 'other' | 'admin';
@@ -71,8 +72,17 @@ export function FeedHeader({ title, uploadPath, selectedRoles, onRoleChange, var
                     <Plus size={24} strokeWidth={2.5} />
                 </button>
 
-                {/* Center: Title */}
-                <h1 className={`text-lg font-bold ${titleColor}`}>{title}</h1>
+                {/* Center: Logo & Title */}
+                <div className="flex items-center gap-2 pointer-events-auto">
+                    <Link href="/">
+                        <img
+                            src="/logo.png"
+                            alt="Keypaper Logo"
+                            className="w-8 h-8 object-contain"
+                        />
+                    </Link>
+                    <h1 className={`text-lg font-bold ${titleColor}`}>{title}</h1>
+                </div>
 
                 {/* Right: Filter Button */}
                 <div className="relative pointer-events-auto">
