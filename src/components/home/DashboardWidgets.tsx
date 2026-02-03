@@ -3,11 +3,28 @@
 import { CloudSun, TrendingUp, Lightbulb, BookOpen, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/components/providers/LanguageProvider";
-
+// Remove hardcoded imports if not needed, or keep for fallback
 import { getOptimizedImageUrl } from "@/lib/utils/image";
+import { useEffect, useState } from "react";
+import { getStories } from "@/lib/services/api"; // Import API service
 
 export function DashboardWidgets() {
     const { t } = useLanguage();
+    const [stories, setStories] = useState<any[]>([]);
+
+    useEffect(() => {
+        async function load() {
+            try {
+                const data = await getStories();
+                // Take top 5
+                setStories(data.slice(0, 5));
+            } catch (err) {
+                console.error("Failed to load dashboard stories", err);
+            }
+        }
+        load();
+    }, []);
+
     return (
         <div className="space-y-4">
             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">{t('highlights_title')}</h3>
@@ -39,29 +56,34 @@ export function DashboardWidgets() {
             {/* Stories Horizontal Scroll Preview */}
             <div className="relative">
                 <div className="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 snap-x">
-                    <Link href="/stories" className="min-w-[140px] h-[200px] bg-gray-900 rounded-xl relative overflow-hidden snap-start shrink-0">
-                        <img
-                            src={getOptimizedImageUrl("https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&q=80&w=400", 200)}
-                            className="w-full h-full object-cover opacity-80"
-                            loading="lazy"
-                        />
-                        <div className="absolute bottom-2 left-2 text-white">
-                            <div className="bg-red-500 text-[10px] font-bold px-1.5 py-0.5 rounded inline-block mb-1">{t('stories_new_badge')}</div>
-                            <div className="text-xs font-bold leading-tight">{t('stories_planting_tips')}</div>
-                        </div>
-                    </Link>
-                    <Link href="/stories" className="min-w-[140px] h-[200px] bg-gray-900 rounded-xl relative overflow-hidden snap-start shrink-0">
-                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10"></div>
-                        <img
-                            src={getOptimizedImageUrl("https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=400", 200)}
-                            className="w-full h-full object-cover opacity-80"
-                            loading="lazy"
-                        />
-                        <div className="absolute bottom-2 left-2 text-white z-20">
-                            <div className="text-xs font-bold leading-tight">{t('stories_harvest_guide')}</div>
-                        </div>
-                    </Link>
-                    <Link href="/stories" className="min-w-[140px] h-[200px] bg-gray-100 rounded-xl relative overflow-hidden snap-start shrink-0 flex items-center justify-center">
+                    {stories.length > 0 ? (
+                        stories.map((story) => (
+                            <Link
+                                key={story.id}
+                                href={`/stories/${story.id}`}
+                                className="min-w-[140px] h-[200px] bg-gray-900 rounded-xl relative overflow-hidden snap-start shrink-0"
+                            >
+                                <img
+                                    src={getOptimizedImageUrl(story.src || story.image_url, 200)}
+                                    className="w-full h-full object-cover opacity-80"
+                                    loading="lazy"
+                                    alt={story.title}
+                                />
+                                <div className="absolute bottom-2 left-2 text-white">
+                                    {/* Optional: Add badge if new */}
+                                    {/* <div className="bg-red-500 text-[10px] font-bold px-1.5 py-0.5 rounded inline-block mb-1">New</div> */}
+                                    <div className="text-xs font-bold leading-tight line-clamp-2">{story.title}</div>
+                                </div>
+                            </Link>
+                        ))
+                    ) : (
+                        // Fallback Skeuomorph or Skeletal Loading
+                        [1, 2].map((i) => (
+                            <div key={i} className="min-w-[140px] h-[200px] bg-gray-200 rounded-xl animate-pulse snap-start shrink-0"></div>
+                        ))
+                    )}
+
+                    <Link href="/stories" className="min-w-[140px] h-[200px] bg-gray-100 rounded-xl relative overflow-hidden snap-start shrink-0 flex items-center justify-center hover:bg-gray-200 transition-colors">
                         <div className="text-gray-400 text-xs font-medium text-center px-4">{t('stories_view_all')}</div>
                     </Link>
                 </div>
