@@ -280,8 +280,18 @@ export default function AskPage() {
                                 <h3 className={styles.questionTitle}>{q.title}</h3>
                                 <p className={styles.questionPreview}>{safeRender(q.description)}</p>
                                 {q.image_url && (
-                                    <div style={{ marginTop: '8px', borderRadius: '12px', overflow: 'hidden', height: '200px', width: '100%' }}>
-                                        <img src={q.image_url} alt="Question Attachment" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <div style={{ marginTop: '8px', borderRadius: '12px', overflow: 'hidden', width: '100%', background: '#F3F4F6', display: 'flex', justifyContent: 'center' }}>
+                                        <img
+                                            src={q.image_url}
+                                            alt="Question Attachment"
+                                            style={{
+                                                maxWidth: '100%',
+                                                maxHeight: '500px',
+                                                width: 'auto',
+                                                height: 'auto',
+                                                objectFit: 'contain'
+                                            }}
+                                        />
                                     </div>
                                 )}
                             </div>

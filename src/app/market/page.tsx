@@ -74,7 +74,7 @@ export default function MarketPage() {
     const [newPrice, setNewPrice] = useState("");
     const [newUnit, setNewUnit] = useState("kg");
     const [newLocation, setNewLocation] = useState("");
-    const [newType, setNewType] = useState<"buy" | "sell" | "rent">("sell");
+    const [newType, setNewType] = useState<"buy" | "sell" | "rent">(activeTab);
     const [newDesc, setNewDesc] = useState("");
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -150,6 +150,7 @@ export default function MarketPage() {
             setShowLoginModal(true);
             return;
         }
+        setNewType(activeTab); // Set default to current tab
         setShowPostModal(true);
     };
 
@@ -458,10 +459,13 @@ export default function MarketPage() {
                                         <option value="ml">ml</option>
                                         <option value="gm">gm</option>
                                         <option value="piece">piece</option>
+                                        <option value="item">item</option>
                                         <option value="box">box</option>
                                         <option value="dozen">dozen</option>
                                         <option value="ton">ton</option>
-                                        <option value="item">item</option>
+                                        <option value="bottle">bottle</option>
+                                        <option value="packet">packet</option>
+                                        <option value="bag">bag</option>
                                     </select>
                                 </div>
                             </div>
