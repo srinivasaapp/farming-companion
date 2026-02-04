@@ -185,23 +185,27 @@ export default function AskPage() {
 
     return (
         <div className="flex flex-col min-h-screen bg-gray-50 pb-20">
-            <FeedHeader
-                title={t('nav_ask')}
-                uploadPath="/ask/upload"
-                selectedRoles={selectedRoles}
-                onRoleChange={setSelectedRoles}
-            />
+            {/* Fixed: Wrap Header and Search in a single sticky container to prevent overlap */}
+            <div className="sticky top-0 z-30 bg-gray-50">
+                <FeedHeader
+                    title={t('nav_ask')}
+                    uploadPath="/ask/upload"
+                    selectedRoles={selectedRoles}
+                    onRoleChange={setSelectedRoles}
+                    sticky={false}
+                />
 
-            <div className="p-4 sticky top-[58px] z-30 bg-gray-50 pb-2">
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                    <input
-                        type="text"
-                        placeholder={t('ask_search_placeholder')}
-                        className="w-full bg-white border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all shadow-sm"
-                        value={searchQuery}
-                        onChange={(e) => updateSearch(e.target.value)}
-                    />
+                <div className="p-4 bg-gray-50 pb-2 border-b border-gray-100 shadow-sm">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                        <input
+                            type="text"
+                            placeholder={t('ask_search_placeholder')}
+                            className="w-full bg-white border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all"
+                            value={searchQuery}
+                            onChange={(e) => updateSearch(e.target.value)}
+                        />
+                    </div>
                 </div>
             </div>
             <div className="flex justify-between items-center px-4 mt-4">
@@ -242,6 +246,16 @@ export default function AskPage() {
                                     <div className={styles.avatar}>{q.profiles?.full_name?.substring(0, 1)}</div>
                                     <div className={styles.meta}>
                                         <span className={styles.userName}>{q.profiles?.full_name}</span>
+                                        {/* Issue 7: User Badges */}
+                                        {q.profiles?.role === 'expert' && (
+                                            <span className="bg-green-100 text-green-700 text-[10px] px-1.5 py-0.5 rounded font-bold ml-2">Expert</span>
+                                        )}
+                                        {q.profiles?.role === 'farmer' && (
+                                            <span className="bg-blue-50 text-blue-700 text-[10px] px-1.5 py-0.5 rounded font-bold ml-2">Farmer</span>
+                                        )}
+                                        {q.profiles?.role !== 'expert' && q.profiles?.role !== 'farmer' && q.profiles?.role && (
+                                            <span className="bg-gray-100 text-gray-600 text-[10px] px-1.5 py-0.5 rounded font-bold ml-2 capitalize">{q.profiles.role}</span>
+                                        )}
                                         <span className={styles.time}>{q.crop}</span>
                                     </div>
                                 </div>

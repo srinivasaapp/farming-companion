@@ -16,7 +16,7 @@ export function HomeHeader() {
     }, []);
 
     return (
-        <header className="flex items-center justify-between px-4 py-4 bg-white sticky top-0 z-10 shadow-sm">
+        <header className="flex items-center justify-between px-4 py-4 bg-white sticky top-0 z-10 shadow-sm safe-area-top">
             <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                     <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />

@@ -29,7 +29,7 @@ export function Navigation() {
         <>
             {/* Header Removed for Mobile-First Design */}
 
-            <nav className={styles.mobileNav}>
+            <nav className={`${styles.mobileNav} safe-area-bottom`}>
                 {navItems.map((item) => {
                     const isActive = pathname === item.href;
                     return (

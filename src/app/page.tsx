@@ -75,6 +75,25 @@ export default function HomePage() {
         <div className="text-center text-xs text-gray-400 py-4 mt-auto">
           {t('home_footer_copyright')}
         </div>
+
+        {/* QR Code Section */}
+        <div className="bg-white m-4 p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
+          <h3 className="font-bold text-gray-800 mb-2">Get the Full Experience</h3>
+          <p className="text-xs text-gray-500 mb-4 max-w-[200px]">
+            Scan to visit keypaper.in or download the app on your phone.
+          </p>
+          <div className="bg-white p-2 rounded-xl border border-gray-100 shadow-inner mb-4">
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://keypaper.in"
+              alt="Keypaper QR Code"
+              className="w-32 h-32"
+            />
+          </div>
+          <div className="flex gap-2 text-[10px] items-center text-gray-400 font-medium bg-gray-50 px-3 py-1.5 rounded-full">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+            Scan with your camera
+          </div>
+        </div>
       </div>
 
       <GlobalSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />

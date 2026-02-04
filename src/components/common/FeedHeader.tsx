@@ -14,6 +14,7 @@ interface FeedHeaderProps {
     selectedRoles: UserRole[];
     onRoleChange: (roles: UserRole[]) => void;
     variant?: 'default' | 'overlay';
+    sticky?: boolean;
 }
 
 const ALL_ROLES: { value: UserRole, label: string }[] = [
@@ -25,7 +26,7 @@ const ALL_ROLES: { value: UserRole, label: string }[] = [
     { value: 'other', label: 'Other' },
 ];
 
-export function FeedHeader({ title, uploadPath, selectedRoles, onRoleChange, variant = 'default' }: FeedHeaderProps) {
+export function FeedHeader({ title, uploadPath, selectedRoles, onRoleChange, variant = 'default', sticky = true }: FeedHeaderProps) {
     const router = useRouter();
     const { user, setShowLoginModal } = useAuth();
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -51,8 +52,8 @@ export function FeedHeader({ title, uploadPath, selectedRoles, onRoleChange, var
 
     // Header Styles
     const containerClasses = isOverlay
-        ? "fixed top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 to-transparent border-none text-white pointer-events-none" // pointer-events-none to let touches pass through empty areas? Actually buttons need pointer-events-auto.
-        : "sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm text-gray-800";
+        ? "fixed top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 to-transparent border-none text-white pointer-events-none safe-area-top" // pointer-events-none to let touches pass through empty areas? Actually buttons need pointer-events-auto.
+        : `${sticky ? 'sticky top-0' : 'relative'} z-30 bg-white border-b border-gray-100 shadow-sm text-gray-800 safe-area-top`;
 
     // Text & Icon Colors
     const titleColor = isOverlay ? "text-white drop-shadow-md" : "text-gray-800";

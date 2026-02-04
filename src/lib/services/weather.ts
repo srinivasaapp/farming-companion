@@ -8,6 +8,8 @@ export interface WeatherData {
 export interface LocationResult {
     name: string;
     region?: string;
+    country?: string;
+    pincode?: string;
     latitude: number;
     longitude: number;
 }
@@ -39,6 +41,7 @@ export const searchCity = async (query: string): Promise<LocationResult[]> => {
         return data.results.map((item: any) => ({
             name: item.name,
             region: item.admin1, // State/Region
+            country: item.country,
             latitude: item.latitude,
             longitude: item.longitude
         }));
@@ -63,7 +66,8 @@ export const getPincodeDetails = async (pincode: string): Promise<LocationResult
             if (geoRes.length > 0) {
                 return {
                     ...geoRes[0],
-                    name: place.Name + ", " + place.District // Override display name
+                    name: place.Name + ", " + place.District, // Override display name
+                    pincode: pincode
                 };
             }
 
@@ -72,7 +76,8 @@ export const getPincodeDetails = async (pincode: string): Promise<LocationResult
             if (districtRes.length > 0) {
                 return {
                     ...districtRes[0],
-                    name: place.Name + " (" + place.District + ")"
+                    name: place.Name + " (" + place.District + ")",
+                    pincode: pincode
                 };
             }
         }

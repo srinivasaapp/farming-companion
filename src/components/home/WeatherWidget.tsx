@@ -192,11 +192,17 @@ export function WeatherWidget() {
                                     className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded-lg flex items-center justify-between group"
                                     onClick={() => saveLocation(res)}
                                 >
-                                    <div>
-                                        <div className="font-bold text-gray-800 text-sm">{res.name}</div>
-                                        {res.region && <div className="text-xs text-gray-500">{res.region}</div>}
+                                    <div className="flex-1 min-w-0 mr-3 overflow-hidden">
+                                        <div className="font-bold text-gray-800 text-sm whitespace-nowrap overflow-x-auto no-scrollbar">
+                                            {res.name}{res.pincode ? ` - ${res.pincode}` : ''}
+                                        </div>
+                                        {res.region && (
+                                            <div className="text-xs text-gray-500 whitespace-nowrap overflow-x-auto no-scrollbar">
+                                                {res.region}, {res.country || 'India'}
+                                            </div>
+                                        )}
                                     </div>
-                                    <MapPin size={16} className="text-gray-300 group-hover:text-green-500" />
+                                    <MapPin size={16} className="text-gray-300 group-hover:text-green-500 shrink-0" />
                                 </button>
                             ))}
 

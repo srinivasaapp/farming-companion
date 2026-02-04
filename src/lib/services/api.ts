@@ -115,7 +115,7 @@ export async function createQuestion(title: string, description: string, crop: s
             title,
             description,
             crop,
-            profile_id: authorId,
+            author_id: authorId,
             image_url: imageUrl,
             is_solved: false
         })
@@ -140,7 +140,7 @@ export async function createNews(news: {
     const payload = {
         ...rest,
         content: rest.content || summary,
-        profile_id: author_id
+        author_id: author_id
     };
 
     const { data, error } = await supabase
@@ -167,7 +167,7 @@ export async function createStory(story: {
         .from('stories')
         .insert({
             ...rest,
-            profile_id: author_id
+            author_id: author_id
         })
         .select()
         .single();
@@ -191,7 +191,7 @@ export async function createListing(listing: {
         .from('listings')
         .insert({
             ...rest,
-            profile_id: author_id,
+            author_id: author_id,
             status: 'active'
         })
         .select()
